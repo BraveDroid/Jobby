@@ -1,19 +1,27 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlinx-serialization'
 }
 
 android {
-    compileSdk 30
+    compileSdk rootProject.ext.versions.compileSdk
 
     defaultConfig {
-        applicationId "com.example.jobby"
-        minSdk 23
-        targetSdk 30
+        applicationId rootProject.ext.applicationId
+        minSdk rootProject.ext.versions.minSdk
+        targetSdk rootProject.ext.versions.targetSdk
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
     }
 
     buildTypes {
@@ -27,17 +35,78 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+}
+
+configurations.all {
+    resolutionStrategy { force "androidx.test:core:$versions.test_core_ktx" }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    //kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlin_coroutines"
+
+    //Dagger Hilt
+    implementation "com.google.dagger:hilt-android:$versions.hilt"
+    kapt "com.google.dagger:hilt-compiler:$versions.hilt"
+
+    //androidx
+    implementation "androidx.core:core-ktx:$versions.core_ktx"
+    implementation "androidx.appcompat:appcompat:$versions.appcompat"
+
+    //lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
+
+    //ui
+    implementation "com.google.android.material:material:$versions.android_material"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
+    implementation "androidx.recyclerview:recyclerview:$versions.recyclerview"
+
+    //data
+    implementation "androidx.preference:preference-ktx:$versions.preference"
+    implementation "androidx.datastore:datastore-preferences:$versions.datastore_preferences"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    implementation "com.google.code.gson:gson:$versions.gson"
+    implementation "org.danilopianini:gson-extras:$versions.gson_extra"
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+    implementation "androidx.room:room-runtime:$versions.room"
+    kapt("androidx.room:room-compiler:$versions.room")
+    implementation "androidx.room:room-ktx:$versions.room"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$versions.kotlinx_serialization_converter"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$versions.kotlinxSerialization"
+
+    //test
+    //jvm-tests
+    testImplementation "androidx.arch.core:core-testing:$versions.core_testing"
+    testImplementation "androidx.test:core-ktx:$versions.test_core_ktx"
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "com.google.truth:truth:$versions.truth"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.kotlin_coroutines"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlin_coroutines"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$versions.mockito_kotlin"
+    testImplementation "org.mockito:mockito-core:$versions.mockito_core"
+    testImplementation "org.mockito:mockito-inline:$versions.mockito_core"
+    testImplementation "androidx.room:room-testing:$versions.room"
+
+    //dagger hilt test
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$versions.hilt"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$versions.hilt"
+
+    //instrumented-tests
+    androidTestImplementation "androidx.test.ext:junit:$versions.test_ext_junit"
+
+    //espresso
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso_core"
+
 }
