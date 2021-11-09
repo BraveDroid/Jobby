@@ -6,9 +6,10 @@ import com.bravedroid.jobby.domain.utils.Result.Companion.toResultErrorUnknown
 import com.bravedroid.jobby.domain.utils.Result.Companion.toResultSuccess
 import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkService
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 import kotlin.Exception
 
-class NetworkDataSource(
+class NetworkDataSource @Inject constructor(
     private val findWorkService: FindWorkService,
 ) {
 

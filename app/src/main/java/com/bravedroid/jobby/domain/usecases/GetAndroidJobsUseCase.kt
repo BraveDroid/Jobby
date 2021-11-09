@@ -5,8 +5,9 @@ import com.bravedroid.jobby.domain.repository.JobsRepository
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.domain.utils.Result.Companion.mapIfSuccess
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class GetAndroidJobsUseCase constructor(
+class GetAndroidJobsUseCase @Inject constructor(
     private val jobsRepository: JobsRepository,
 ) {
     operator fun invoke() = jobsRepository.getAndroidJobs().map { result: Result<List<Job>> ->
