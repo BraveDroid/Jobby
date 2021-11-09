@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.util
+package com.bravedroid.jobby.infrastructure.data.network.findwork.service
 
 import com.bravedroid.jobby.infrastructure.data.network.findwork.dto.JobResponseDto
 import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkService

@@ -34,36 +34,30 @@ sealed class Result<out R> {
 
         private fun <T> List<Result<T>>.areAllErrors() = all { it is Result.Error }
 
-        /**
-         * `true` if [Result] is of type [Success] & holds non-null [Success.data].
-         */
-        val Result<*>.succeeded
-            get() = this is Result.Success && data != null
-
         /*
         * Returns the encapsulated result of the given transform function applied to the encapsulated value if this instance
         * represents success or the original encapsulated Throwable exception if it is failure.
         */
-       /* inline fun <R, T> Result<T>.map(transform: (value: T) -> R): Result<R> =
+        inline fun <R, T> Result<T>.mapIfSuccess(transform: (value: T) -> R): Result<R> =
             when (this) {
                 is Result.Success -> {
                     tryMapping { transform(data) }
                 }
                 is Result.Error -> this
-            }*/
+            }
 
-       /* inline fun <R, T> Result<T>.tryMapping(transform: (value: T) -> R): Result<R> {
+        inline fun <R, T> Result<T>.tryMapping(transform: (value: T) -> R): Result<R> {
             return when (this) {
                 is Result.Success -> {
                     try {
                         Result.Success(transform(data))
                     } catch (e: Throwable) {
-                        Result.Error(e)
+                        Result.Error.Unknown(e)
                     }
                 }
                 is Result.Error -> this
             }
-        }*/
+        }
 
         fun <T> Result<T>.asFlow() = flowOf(this)
 

@@ -4,7 +4,7 @@ import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.domain.utils.Result.Companion.isSucceeded
 import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkService
-import com.bravedroid.jobby.util.FindWorkServiceFake
+import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkServiceFake
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.single
@@ -20,7 +20,7 @@ import kotlin.RuntimeException
 @ExperimentalCoroutinesApi
 class NetworkDataSourceTest {
 
-    lateinit var sut: NetworkDataSource
+   private lateinit var sut: NetworkDataSource
 
     @Test
     fun `fetchJobsTest success case`() = runBlockingTest {
