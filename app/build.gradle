@@ -95,7 +95,8 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.kotlin_coroutines"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlin_coroutines"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$versions.mockito_kotlin"
-    testImplementation "org.mockito:mockito-core:$versions.mockito_core"
+//    testImplementation "org.mockito:mockito-core:$versions.mockito_core"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation "org.mockito:mockito-inline:$versions.mockito_core"
     testImplementation "androidx.room:room-testing:$versions.room"
 

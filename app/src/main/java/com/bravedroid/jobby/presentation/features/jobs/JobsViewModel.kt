@@ -2,9 +2,9 @@ package com.bravedroid.jobby.presentation.features.jobs
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase.GetAndroidJobsResponse
+import com.bravedroid.jobby.domain.utils.CoroutineProvider
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.presentation.util.PageState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,13 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JobsViewModel @Inject constructor(
+    private val coroutineProvider: CoroutineProvider,
     private val savedStateHandle: SavedStateHandle,
     private val getAndroidJobsUseCase: GetAndroidJobsUseCase,
 ) : ViewModel() {
 
-    init {
-        loadJobs()
-    }
 
     private val _pageStateFlow: MutableStateFlow<PageState<GetAndroidJobsResponse>> =
         MutableStateFlow(PageState.Loading)
@@ -29,8 +27,12 @@ class JobsViewModel @Inject constructor(
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
 
+    init {
+        loadJobs()
+    }
+
     private fun loadJobs() {
-        viewModelScope.launch {
+        coroutineProvider.provideViewModelScope(this).launch {
             getAndroidJobsUseCase().catch { t ->
                 emit(Result.Error.Unknown(t))
             }.collectLatest {
@@ -56,4 +58,6 @@ class JobsViewModel @Inject constructor(
         data class ShowError(val errorMessage: String) : UiEvent()
         object ContentLoaded : UiEvent()
     }
+
+
 }
