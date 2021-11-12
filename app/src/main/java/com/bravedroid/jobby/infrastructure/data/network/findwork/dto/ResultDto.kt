@@ -42,6 +42,7 @@ data class ResultDto(
             companyName = companyName,
             datePosted = datePosted,
             employmentType = employmentType,
+            id = id,
             companyNumEmployees = companyNumEmployees,
             logo = logo,
             description = text,

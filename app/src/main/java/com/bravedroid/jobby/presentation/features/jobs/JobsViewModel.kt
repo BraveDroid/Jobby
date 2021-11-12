@@ -1,5 +1,6 @@
 package com.bravedroid.jobby.presentation.features.jobs
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase
@@ -31,7 +32,8 @@ class JobsViewModel @Inject constructor(
         loadJobs()
     }
 
-    private fun loadJobs() {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     fun loadJobs() {
         coroutineProvider.provideViewModelScope(this).launch {
             getAndroidJobsUseCase().catch { t ->
                 emit(Result.Error.Unknown(t))
