@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.domain.utils
+package com.bravedroid.jobby.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

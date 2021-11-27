@@ -3,9 +3,9 @@ package com.bravedroid.jobby.presentation.features.jobs
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.bravedroid.jobby.di.CoroutineProvider
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase.GetAndroidJobsResponse
-import com.bravedroid.jobby.domain.utils.CoroutineProvider
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.presentation.util.PageState
 import dagger.hilt.android.lifecycle.HiltViewModel
