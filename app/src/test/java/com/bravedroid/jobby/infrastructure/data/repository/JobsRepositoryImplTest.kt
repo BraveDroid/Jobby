@@ -1,6 +1,6 @@
 package com.bravedroid.jobby.infrastructure.data.repository
 
-import com.bravedroid.jobby.infrastructure.data.network.findwork.datasource.NetworkDataSource
+import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.NetworkDataSource
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.verify

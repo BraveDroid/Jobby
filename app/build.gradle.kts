@@ -56,6 +56,7 @@ configurations.all {
 dependencies {
 
     implementation(project(":domain"))
+    implementation(project(":infrastructure:data:datasource:network:findwork"))
 
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
@@ -87,7 +88,7 @@ dependencies {
     implementation("androidx.preference:preference-ktx:${Versions.preference}")
     implementation("androidx.datastore:datastore-preferences:${Versions.datastore_preferences}")
     implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
-    implementation("com.squareup.retrofit2:converter-gson:${Versions.retrofit}")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.kotlinx_serialization_converter}")
     implementation("com.google.code.gson:gson:${Versions.gson}")
     implementation("org.danilopianini:gson-extras:${Versions.gson_extra}")
     implementation("com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}")
@@ -95,7 +96,6 @@ dependencies {
     implementation("androidx.room:room-runtime:${Versions.room}")
     kapt("androidx.room:room-compiler:${Versions.room}")
     implementation("androidx.room:room-ktx:${Versions.room}")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.kotlinx_serialization_converter}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}")
 
     //test

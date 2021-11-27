@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.infrastructure.data.network.findwork
+package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork
 
 object FindWorkConstants {
     const val BASE_URL = "https://findwork.dev/api/jobs/"

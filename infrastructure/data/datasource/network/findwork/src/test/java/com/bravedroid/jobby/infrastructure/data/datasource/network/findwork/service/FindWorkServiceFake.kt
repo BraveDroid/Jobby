@@ -1,7 +1,5 @@
-package com.bravedroid.jobby.infrastructure.data.network.findwork.service
+package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service
 
-import com.bravedroid.jobby.infrastructure.data.network.findwork.dto.JobResponseDto
-import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkService
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -14,10 +12,8 @@ class FindWorkServiceFake : FindWorkService {
         coerceInputValues = true
     }
 
-    override suspend fun getJobs(): JobResponseDto {
+    override suspend fun getJobs(): com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.dto.JobResponseDto {
         val text = this::class.java.getResource("/GET_jobs_from_findwork.json")!!.readText()
         return json.decodeFromString(text)
-
     }
 }
-

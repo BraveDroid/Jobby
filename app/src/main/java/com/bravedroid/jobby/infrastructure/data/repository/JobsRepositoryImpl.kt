@@ -1,7 +1,7 @@
 package com.bravedroid.jobby.infrastructure.data.repository
 
 import com.bravedroid.jobby.domain.repository.JobsRepository
-import com.bravedroid.jobby.infrastructure.data.network.findwork.datasource.NetworkDataSource
+import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.NetworkDataSource
 import javax.inject.Inject
 import javax.inject.Singleton
 

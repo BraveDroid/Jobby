@@ -1,6 +1,6 @@
-package com.bravedroid.jobby.infrastructure.data.network.findwork.dto
+package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.dto
 
-import com.bravedroid.jobby.infrastructure.data.network.findwork.dto.ResultDto.Companion.toJob
+import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.dto.ResultDto.Companion.toJob
 import com.bravedroid.jobby.domain.entities.Job
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,26 +1,23 @@
-package com.bravedroid.jobby.infrastructure.data.network.findwork.datasource
+package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork
 
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.domain.utils.Result.Companion.isSucceeded
-import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkService
-import com.bravedroid.jobby.infrastructure.data.network.findwork.service.FindWorkServiceFake
+import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkServiceFake
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.serialization.ExperimentalSerializationApi
-
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import kotlin.RuntimeException
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
 class NetworkDataSourceTest {
 
-   private lateinit var sut: NetworkDataSource
+    private lateinit var sut: NetworkDataSource
 
     @Test
     fun `fetchJobsTest success case`() = runBlockingTest {
@@ -32,6 +29,7 @@ class NetworkDataSourceTest {
         result as Result.Success
         val jobs = result.data
         val job = Job(
+            id = 98824,
             role = "Java, Spring, AWS Software Engineer",
             keywords = listOf("kafka", "restful", "aws", "lambda", "spring"),
             isRemote = false,
@@ -47,7 +45,8 @@ class NetworkDataSourceTest {
 
     @Test
     fun `fetchJobsTest error case`() = runBlockingTest {
-        val findWorkServiceMock = mock(FindWorkService::class.java)
+        val findWorkServiceMock =
+            mock(com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkService::class.java)
         `when`(findWorkServiceMock.getJobs()).thenThrow(RuntimeException("error"))
         sut = NetworkDataSource(findWorkServiceMock)
 
@@ -61,3 +60,4 @@ class NetworkDataSourceTest {
         Truth.assertThat(jobs.message).contains("error")
     }
 }
+

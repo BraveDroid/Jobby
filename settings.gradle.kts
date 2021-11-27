@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 rootProject.name = "Jobby"
 include ("app")
 include ("domain")
+include ("infrastructure:data:datasource:network:findwork")

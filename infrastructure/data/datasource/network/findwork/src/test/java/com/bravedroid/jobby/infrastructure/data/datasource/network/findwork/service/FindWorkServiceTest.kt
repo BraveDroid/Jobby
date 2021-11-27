@@ -1,6 +1,5 @@
-package com.bravedroid.jobby.infrastructure.data.network.findwork.service
+package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service
 
-import com.bravedroid.jobby.infrastructure.data.network.findwork.NetworkBuilderHiltModule
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
