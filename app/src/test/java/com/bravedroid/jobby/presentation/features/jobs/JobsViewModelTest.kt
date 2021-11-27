@@ -1,9 +1,9 @@
 package com.bravedroid.jobby.presentation.features.jobs
 
 import androidx.lifecycle.SavedStateHandle
+import com.bravedroid.jobby.di.CoroutineProvider
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase
-import com.bravedroid.jobby.domain.utils.CoroutineProvider
 import com.bravedroid.jobby.domain.utils.Result.Companion.asFlow
 import com.bravedroid.jobby.domain.utils.Result.Companion.toResultSuccess
 import com.bravedroid.jobby.presentation.util.PageState
