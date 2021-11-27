@@ -57,6 +57,7 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":infrastructure:data:datasource:network:findwork"))
+    implementation(project(":infrastructure:data:repository"))
 
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")

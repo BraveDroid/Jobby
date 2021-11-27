@@ -12,7 +12,9 @@ class JobsRepositoryImplTest {
     @Test
     fun getAndroidJobs() {
         val networkDataSourceMock: NetworkDataSource = mock(NetworkDataSource::class.java)
-        sut = JobsRepositoryImpl(networkDataSourceMock)
+        sut = JobsRepositoryImpl(
+            networkDataSourceMock
+        )
         sut.getAndroidJobs()
         verify(networkDataSourceMock).fetchJobs()
     }
