@@ -1,3 +1,5 @@
+import utils.Factory
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -5,6 +7,10 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("kotlinx-serialization")
+}
+
+Factory.createHelloWord("from Build Gradle").also {
+    println(it)
 }
 
 android {
@@ -27,8 +33,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled =  true
-            isShrinkResources =  true
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -48,6 +54,8 @@ configurations.all {
 }
 
 dependencies {
+
+    implementation(project(":domain"))
 
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
