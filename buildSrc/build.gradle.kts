@@ -1,5 +1,5 @@
 val androidBuildToolsVersion = "7.0.3"
-val kotlinVersion = "1.5.31"
+val kotlinVersion = "1.5.21"
 
 plugins {
     `kotlin-dsl`
