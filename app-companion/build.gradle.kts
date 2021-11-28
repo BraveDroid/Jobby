@@ -1,6 +1,8 @@
 
 plugins {
     id("convention-app-build")
+    id("dagger.hilt.android.plugin")
+    id("kotlinx-serialization")
 }
 
 android {
@@ -11,8 +13,7 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.compose
-        kotlinCompilerVersion = "1.5.21"
-    }
+     }
 
     packagingOptions {
         resources {

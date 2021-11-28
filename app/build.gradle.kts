@@ -1,6 +1,8 @@
 import utils.Factory
 plugins {
     id("convention-app-build")
+    id("dagger.hilt.android.plugin")
+    id("kotlinx-serialization")
 }
 
 Factory.createHelloWord("from Build Gradle").also {

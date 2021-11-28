@@ -3,9 +3,6 @@ val kotlinVersion = "1.5.21"
 
 plugins {
     `kotlin-dsl`
-    `java-gradle-plugin`
-     `kotlin-dsl-precompiled-script-plugins`
-
 }
 
 repositories {

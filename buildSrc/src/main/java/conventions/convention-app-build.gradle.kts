@@ -1,10 +1,7 @@
-
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-//    id("dagger.hilt.android.plugin")
-//    id("kotlinx-serialization")
 }
 
 android {
@@ -31,16 +28,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 
-dependencies{
+dependencies {
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")

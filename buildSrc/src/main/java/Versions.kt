@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.invoke
 
 object Versions {
     const val applicationId = "com.bravedroid.jobby"
@@ -15,10 +13,11 @@ object Versions {
 
     //kotlin
     const val kotlin = "1.5.21"
-    const val kotlin_coroutines = "1.5.2"
+    const val kotlin_coroutines = "1.6.0-RC"
 
     //Dagger Hilt
     const val hilt = "2.38.1"
+    //const val hilt = "2.40.2"
 
     //ui
     const val android_material = "1.4.0"
