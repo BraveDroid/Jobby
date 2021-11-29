@@ -1,3 +1,4 @@
+
 object Versions {
     const val applicationId = "com.bravedroid.jobby"
     //apiSDK
@@ -11,11 +12,12 @@ object Versions {
     const val lifecycle = "2.3.0-rc01"
 
     //kotlin
-    const val kotlin = "1.5.31"
-    const val kotlin_coroutines = "1.5.2"
+    const val kotlin = "1.5.21"
+    const val kotlin_coroutines = "1.6.0-RC"
 
     //Dagger Hilt
     const val hilt = "2.38.1"
+    //const val hilt = "2.40.2"
 
     //ui
     const val android_material = "1.4.0"
@@ -43,4 +45,9 @@ object Versions {
 
     const val espresso_core = "3.4.0"
     const val test_ext_junit = "1.1.3"
+
+    //compose
+    const val compose ="1.0.1"
+    const val activity_compose ="1.3.0-alpha06"
+
 }
