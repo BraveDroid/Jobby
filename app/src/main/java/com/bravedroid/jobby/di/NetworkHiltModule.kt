@@ -14,17 +14,11 @@ import javax.inject.Singleton
 
 @Module(includes = [NetworkBuilderHiltModule::class])
 @InstallIn(SingletonComponent::class)
-class NetworkHiltModule
+abstract class NetworkHiltModule
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkBuilderHiltModule {
-    @Singleton
-    @Provides
-    fun providesOkHttpClient(): OkHttpClient =
-        OkHttpClient.Builder()
-            // TODO: 09/11/2021 RF: support cache and network interceptor for debugging tools, headers...
-            .build()
 
     @Singleton
     @Provides

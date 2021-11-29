@@ -1,7 +1,7 @@
-
 plugins {
     `android-library`
     kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -37,7 +37,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
-    implementation("javax.inject:javax.inject:1")
+
+    //Dagger Hilt
+    implementation("com.google.dagger:hilt-android:${Versions.hilt}")
+    kapt("com.google.dagger:hilt-compiler:${Versions.hilt}")
+
+    //dagger hilt test
+    androidTestImplementation("com.google.dagger:hilt-android-testing:${Versions.hilt}")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Versions.hilt}")
 
     //test
     //jvm-testsVersions

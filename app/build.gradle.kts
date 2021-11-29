@@ -24,6 +24,7 @@ configurations.all {
 dependencies {
 
     implementation(project(":domain"))
+    implementation(project(":infrastructure:data:datasource:auth"))
     implementation(project(":infrastructure:data:datasource:network:findwork"))
     implementation(project(":infrastructure:data:repository"))
 

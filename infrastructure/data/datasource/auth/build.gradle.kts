@@ -1,5 +1,6 @@
 plugins {
     id("convention-android-library-build")
+    id("dagger.hilt.android.plugin")
     id("kotlinx-serialization")
 }
 

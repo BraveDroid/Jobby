@@ -16,7 +16,7 @@ class AuthServiceTest {
 
     @Test
     fun `check availability service`() = runBlocking {
-        sut = createAuthServiceByRetrofit()
+        sut = AuthServiceFactory.create()
         val name = createRandomString()
         val email = "$name@gmail.com"
         val password = "$name&2020"
@@ -41,11 +41,6 @@ class AuthServiceTest {
             loginResult.refreshToken
         ))
         Truth.assertThat(refreshTokenResult.tokenType).isEqualTo("Bearer")
-    }
-
-    private fun createAuthServiceByRetrofit(): AuthService {
-        val networkBuilderHiltModule = NetworkBuilderHiltModule()
-        return networkBuilderHiltModule.providesAuthService()
     }
 
     private fun createRandomString(): String {

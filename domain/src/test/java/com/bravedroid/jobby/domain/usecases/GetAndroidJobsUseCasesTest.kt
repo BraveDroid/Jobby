@@ -19,6 +19,7 @@ class GetAndroidJobsUseCasesTest {
 
     private lateinit var sut: GetAndroidJobsUseCase
     private val nonRemoteJob = Job(
+        id = 1,
         role = "Java, Spring, AWS Software Engineer",
         keywords = listOf("kafka", "restful", "aws", "lambda", "spring"),
         isRemote = false,
@@ -31,6 +32,7 @@ class GetAndroidJobsUseCasesTest {
     )
 
     private val remoteJob = Job(
+        id = 2,
         role = "Java, Spring, AWS Software Engineer",
         keywords = listOf("kafka", "restful", "aws", "lambda", "spring"),
         isRemote = true,

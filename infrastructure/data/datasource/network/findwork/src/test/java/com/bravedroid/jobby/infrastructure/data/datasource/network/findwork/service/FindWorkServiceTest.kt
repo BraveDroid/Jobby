@@ -12,13 +12,8 @@ class FindWorkServiceTest {
 
     @Test
     fun `check availability service`() = runBlocking {
-        sut = createFindWorkServiceByRetrofit()
+        sut = FindWorkServiceFactory.create()
         val actualResult = sut.getJobs()
         Truth.assertThat(actualResult.results).isNotEmpty()
-    }
-
-    private fun createFindWorkServiceByRetrofit(): FindWorkService {
-        val networkBuilderHiltModule = NetworkBuilderHiltModule()
-        return networkBuilderHiltModule.providesFindWorkService()
     }
 }

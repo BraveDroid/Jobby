@@ -7,10 +7,9 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
-class NetworkBuilderHiltModule {
+object AuthServiceFactory {
     private fun providesOkHttpClient(): OkHttpClient =
         OkHttpClient.Builder()
-            // TODO: 09/11/2021 RF: support cache and network interceptor for debugging tools, headers...
             .build()
 
 
@@ -26,7 +25,7 @@ class NetworkBuilderHiltModule {
         .build()
 
 
-    fun providesAuthService(): AuthService {
+    fun create(): AuthService {
         val retrofit = providesRetrofit(providesOkHttpClient())
         return retrofit.create(AuthService::class.java)
     }
