@@ -8,7 +8,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Jobby"
 include(":app")
+include(":app-companion")
 include(":domain")
 include(":infrastructure:data:datasource:network:findwork")
 include(":infrastructure:data:repository")
-include(":app-companion")
+include(":infrastructure:data:datasource:auth")
