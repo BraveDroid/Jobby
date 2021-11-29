@@ -19,8 +19,6 @@ class FindWorkServiceTest {
 
     private fun createFindWorkServiceByRetrofit(): FindWorkService {
         val networkBuilderHiltModule = NetworkBuilderHiltModule()
-        val okHttp = networkBuilderHiltModule.providesOkHttpClient()
-        val retrofit = networkBuilderHiltModule.providesRetrofit(okHttp)
-        return networkBuilderHiltModule.providesFindWorkService(retrofit)
+        return networkBuilderHiltModule.providesFindWorkService()
     }
 }
