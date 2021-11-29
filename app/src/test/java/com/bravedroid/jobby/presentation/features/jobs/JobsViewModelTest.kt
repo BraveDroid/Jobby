@@ -14,7 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.`when`
@@ -30,6 +30,7 @@ class JobsViewModelTest {
     private lateinit var getAndroidJobsUseCaseMock: GetAndroidJobsUseCase
 
     private val nonRemoteJob = Job(
+        id= 1,
         role = "Java, Spring, AWS Software Engineer",
         keywords = listOf("kafka", "restful", "aws", "lambda", "spring"),
         isRemote = false,
@@ -42,6 +43,7 @@ class JobsViewModelTest {
     )
 
     private val remoteJob = Job(
+        id= 2,
         role = "Java, Spring, AWS Software Engineer",
         keywords = listOf("kafka", "restful", "aws", "lambda", "spring"),
         isRemote = true,
@@ -54,7 +56,7 @@ class JobsViewModelTest {
     )
 
     @Test
-    fun getPageStateFlowTest() = runBlockingTest {
+    fun getPageStateFlowTest() = runTest {
         //arrange
         coroutineProviderMock = mock(CoroutineProvider::class.java)
         savedStateHandleMock = mock(SavedStateHandle::class.java)
@@ -100,7 +102,7 @@ class JobsViewModelTest {
     }
 
     @Test
-    fun getUiEventFlow() = runBlockingTest  {
+    fun getUiEventFlow() = runTest  {
 
         //arrange
         coroutineProviderMock = mock(CoroutineProvider::class.java)

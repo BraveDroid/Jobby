@@ -1,0 +1,5 @@
+{
+  "accessToken": "access token",
+  "refreshToken": "refresh token",
+  "tokenType": "Bearer"
+}

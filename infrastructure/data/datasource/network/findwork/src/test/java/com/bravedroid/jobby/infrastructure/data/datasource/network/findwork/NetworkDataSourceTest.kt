@@ -7,7 +7,7 @@ import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.serv
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.Test
 import org.mockito.Mockito.`when`
@@ -20,7 +20,7 @@ class NetworkDataSourceTest {
     private lateinit var sut: NetworkDataSource
 
     @Test
-    fun `fetchJobsTest success case`() = runBlockingTest {
+    fun `fetchJobsTest success case`() = runTest {
         val findWorkServiceFake = FindWorkServiceFake()
         sut = NetworkDataSource(findWorkServiceFake)
         val resultFlow = sut.fetchJobs()
@@ -44,7 +44,7 @@ class NetworkDataSourceTest {
     }
 
     @Test
-    fun `fetchJobsTest error case`() = runBlockingTest {
+    fun `fetchJobsTest error case`() = runTest {
         val findWorkServiceMock =
             mock(com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkService::class.java)
         `when`(findWorkServiceMock.getJobs()).thenThrow(RuntimeException("error"))

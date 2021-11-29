@@ -10,7 +10,7 @@ import com.bravedroid.jobby.domain.utils.Result.Companion.toResultSuccess
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.mockito.Mockito.*
 
@@ -44,7 +44,7 @@ class GetAndroidJobsUseCasesTest {
     private val jobList = listOf(nonRemoteJob, remoteJob)
 
     @Test
-    fun `invoke android jobs uesCases success result`() = runBlockingTest {
+    fun `invoke android jobs uesCases success result`() = runTest {
         val jobsRepositoryMock = mock(JobsRepository::class.java)
         `when`(jobsRepositoryMock.getAndroidJobs()).thenReturn(jobList.toResultSuccess().asFlow())
         sut = GetAndroidJobsUseCase(jobsRepositoryMock)
@@ -58,7 +58,7 @@ class GetAndroidJobsUseCasesTest {
     }
 
     @Test
-    fun `invoke android jobs uesCases error result `() = runBlockingTest {
+    fun `invoke android jobs uesCases error result `() = runTest {
         val jobsRepositoryMock = mock(JobsRepository::class.java)
         `when`(jobsRepositoryMock.getAndroidJobs()).thenReturn(
             RuntimeException().toResultErrorUnknown().asFlow()
