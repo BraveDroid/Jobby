@@ -6,6 +6,7 @@ import com.bravedroid.jobby.auth.dto.refreshtoken.RefreshTokenRequestDto
 import com.bravedroid.jobby.auth.dto.refreshtoken.RefreshTokenResponseDto
 import com.bravedroid.jobby.auth.dto.register.RegisterRequestDto
 import com.bravedroid.jobby.auth.dto.register.RegisterResponseDto
+import com.bravedroid.jobby.auth.service.AuthService
 import com.bravedroid.jobby.auth.service.AuthServiceFake
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.domain.utils.Result.Companion.isSucceeded
@@ -16,6 +17,9 @@ import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
@@ -49,6 +53,32 @@ class AuthDataSourceTest : TestCase() {
     }
 
     @Test
+    fun `testRegisterUser error case ` () = runTest {
+        val authServiceMock = mock(AuthService::class.java)
+        `when`(authServiceMock.registerUser(
+            RegisterRequestDto(
+                email = "UserB@gmail.com",
+                name = "UserB",
+                password = "User",
+            )
+        )).thenThrow(RuntimeException("error"))
+        sut = AuthDataSource(authServiceMock)
+
+       val resultFlow = sut.registerUser(RegisterRequestDto(
+            email = "UserB@gmail.com",
+            name = "UserB",
+            password = "User",
+        ))
+        val result = resultFlow.single()
+
+        Truth.assertThat(result.isSucceeded).isFalse()
+        result as Result.Error.Unknown
+        val response = result.throwable
+        Truth.assertThat(response.message).contains("error")
+
+    }
+
+    @Test
     fun testLoginUser() = runTest {
         val authServiceFake = AuthServiceFake()
         sut = AuthDataSource(authServiceFake)
@@ -69,9 +99,34 @@ class AuthDataSourceTest : TestCase() {
             LoginResponseDto(
                 accessToken = "access token",
                 refreshToken = "refresh token",
-                tokenType = "Bearer"
+                tokenType = "Bearer",
             )
         )
+    }
+
+    @Test
+    fun `testLoginUser error case ` () = runTest {
+        val authServiceMock = mock(AuthService::class.java)
+        `when`(authServiceMock.loginUser(
+            LoginRequestDto(
+                email = "UserB@gmail.com",
+                password = "User",
+            )
+        )).thenThrow(RuntimeException("error"))
+        sut = AuthDataSource(authServiceMock)
+
+        val resultFlow = sut.loginUser(
+            LoginRequestDto(
+            email = "UserB@gmail.com",
+            password = "User",
+        )
+        )
+        val result = resultFlow.single()
+
+        Truth.assertThat(result.isSucceeded).isFalse()
+        result as Result.Error.Unknown
+        val response = result.throwable
+        Truth.assertThat(response.message).contains("error")
     }
 
     @Test
@@ -93,8 +148,30 @@ class AuthDataSourceTest : TestCase() {
         Truth.assertThat(response).isEqualTo(
             RefreshTokenResponseDto(
                 accessToken = "new access token",
-                tokenType = "Bearer"
+                tokenType = "Bearer",
             )
         )
+    }
+
+    @Test
+    fun `test check refreshToken error case` () = runTest {
+        val authServiceMock = mock(AuthService::class.java)
+        `when`(authServiceMock.refreshToken(
+            RefreshTokenRequestDto(
+                refreshToken = "refresh Token",
+            )
+        )).thenThrow(RuntimeException("error"))
+        sut = AuthDataSource(authServiceMock)
+
+        val resultFlow = sut.refreshToken(
+            RefreshTokenRequestDto(
+                refreshToken = "refresh Token",
+        ))
+        val result = resultFlow.single()
+
+        Truth.assertThat(result.isSucceeded).isFalse()
+        result as Result.Error.Unknown
+        val response = result.throwable
+        Truth.assertThat(response.message).contains("error")
     }
 }

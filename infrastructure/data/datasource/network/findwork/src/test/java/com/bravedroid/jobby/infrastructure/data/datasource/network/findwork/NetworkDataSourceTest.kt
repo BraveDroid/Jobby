@@ -3,6 +3,7 @@ package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.utils.Result
 import com.bravedroid.jobby.domain.utils.Result.Companion.isSucceeded
+import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkService
 import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkServiceFake
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,8 +46,7 @@ class NetworkDataSourceTest {
 
     @Test
     fun `fetchJobsTest error case`() = runTest {
-        val findWorkServiceMock =
-            mock(com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkService::class.java)
+        val findWorkServiceMock = mock(FindWorkService::class.java)
         `when`(findWorkServiceMock.getJobs()).thenThrow(RuntimeException("error"))
         sut = NetworkDataSource(findWorkServiceMock)
 
