@@ -14,6 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -56,7 +57,7 @@ class JobsViewModelTest {
     )
 
     @Test
-    fun getPageStateFlowTest() = runTest {
+    fun getPageStateFlowTest() = runTest (UnconfinedTestDispatcher()){
         //arrange
         coroutineProviderMock = mock(CoroutineProvider::class.java)
         savedStateHandleMock = mock(SavedStateHandle::class.java)
@@ -102,7 +103,7 @@ class JobsViewModelTest {
     }
 
     @Test
-    fun getUiEventFlow() = runTest  {
+    fun getUiEventFlow() = runTest (UnconfinedTestDispatcher()) {
 
         //arrange
         coroutineProviderMock = mock(CoroutineProvider::class.java)
