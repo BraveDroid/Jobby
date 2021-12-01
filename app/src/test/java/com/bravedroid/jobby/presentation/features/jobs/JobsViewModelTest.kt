@@ -4,10 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.bravedroid.jobby.di.CoroutineProvider
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase
-import com.bravedroid.jobby.domain.utils.Result.Companion.asFlow
-import com.bravedroid.jobby.domain.utils.Result.Companion.toResultSuccess
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.asFlow
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultSuccess
 import com.bravedroid.jobby.presentation.util.PageState
-import com.bravedroid.jobby.util.CoroutineTestRule
 import com.google.common.truth.Truth
 import com.nhaarman.mockitokotlin2.any
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock

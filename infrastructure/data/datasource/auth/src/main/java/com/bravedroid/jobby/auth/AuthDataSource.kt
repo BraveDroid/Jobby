@@ -4,13 +4,15 @@ import com.bravedroid.jobby.auth.dto.login.LoginRequestDto
 import com.bravedroid.jobby.auth.dto.refreshtoken.RefreshTokenRequestDto
 import com.bravedroid.jobby.auth.dto.register.RegisterRequestDto
 import com.bravedroid.jobby.auth.service.AuthService
-import com.bravedroid.jobby.domain.utils.Result.Companion.toResultErrorUnknown
-import com.bravedroid.jobby.domain.utils.Result.Companion.toResultSuccess
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultError
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultSuccess
+import com.bravedroid.jobby.domain.utils.ErrorHandler
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthDataSource @Inject constructor(
     private val authService: AuthService,
+    private val errorHandler: ErrorHandler,
 ) {
     fun registerUser(body: RegisterRequestDto) =
         flow {
@@ -19,12 +21,7 @@ class AuthDataSource @Inject constructor(
                     val response = authService.registerUser(body)
                     response.toResultSuccess()
                 } catch (e: Exception) {
-                    when (e) {
-//                    is RuntimeException ->
-                        else -> {
-                            e.toResultErrorUnknown()
-                        }
-                    }
+                    errorHandler.handle(e).toResultError()
                 }
             emit(result)
         }
@@ -35,12 +32,7 @@ class AuthDataSource @Inject constructor(
                 val response = authService.loginUser(body)
                 response.toResultSuccess()
             } catch (e: Exception) {
-                when (e) {
-//                    is RuntimeException ->
-                    else -> {
-                        e.toResultErrorUnknown()
-                    }
-                }
+                errorHandler.handle(e).toResultError()
             }
         emit(result)
     }
@@ -51,12 +43,7 @@ class AuthDataSource @Inject constructor(
                 val response = authService.refreshToken(body)
                 response.toResultSuccess()
             } catch (e: Exception) {
-                when (e) {
-//                    is RuntimeException ->
-                    else -> {
-                        e.toResultErrorUnknown()
-                    }
-                }
+                errorHandler.handle(e).toResultError()
             }
         emit(result)
     }

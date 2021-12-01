@@ -11,5 +11,5 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryHiltModule {
     @Binds
-    abstract fun binds(jobsRepositoryImpl: com.bravedroid.jobby.infrastructure.data.repository.JobsRepositoryImpl): JobsRepository
+    abstract fun bindsJobsRepository(jobsRepositoryImpl: JobsRepositoryImpl): JobsRepository
 }

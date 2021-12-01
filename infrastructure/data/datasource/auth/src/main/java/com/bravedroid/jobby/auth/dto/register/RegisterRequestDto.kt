@@ -1,5 +1,7 @@
 package com.bravedroid.jobby.auth.dto.register
 
+import com.bravedroid.jobby.domain.usecases.RegisterUserUseCase
+import com.bravedroid.jobby.domain.usecases.RegisterUserUseCase.RegistrationRequest
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,3 +14,10 @@ data class RegisterRequestDto(
     @SerialName("password")
     val password: String = ""
 )
+
+fun RegistrationRequest.toRegisterRequestDto(): RegisterRequestDto =
+    RegisterRequestDto(
+        email = this.email,
+        name = this.name,
+        password = this.password,
+    )

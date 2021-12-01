@@ -4,9 +4,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.bravedroid.jobby.di.CoroutineProvider
+import com.bravedroid.jobby.domain.entities.ErrorEntity
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase
 import com.bravedroid.jobby.domain.usecases.GetAndroidJobsUseCase.GetAndroidJobsResponse
-import com.bravedroid.jobby.domain.utils.Result
+import com.bravedroid.jobby.domain.utils.DomainResult
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultError
 import com.bravedroid.jobby.presentation.util.PageState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -36,18 +38,18 @@ class JobsViewModel @Inject constructor(
      fun loadJobs() {
         coroutineProvider.provideViewModelScope(this).launch {
             getAndroidJobsUseCase().catch { t ->
-                emit(Result.Error.Unknown(t))
+                emit(ErrorEntity.Unknown.toResultError())
             }.collectLatest {
                 when (it) {
-                    is Result.Error -> {
+                    is DomainResult.Error -> {
                         _pageStateFlow.value = PageState.Error
                         _uiEventFlow.emit(
                             UiEvent.ShowError(
-                                it.throwable.message ?: "Unknown Error !"
+                                  "Unknown Error !"
                             )
                         )
                     }
-                    is Result.Success -> {
+                    is DomainResult.Success -> {
                         _pageStateFlow.value = PageState.Content(it.data)
                         _uiEventFlow.emit(UiEvent.ContentLoaded)
                     }

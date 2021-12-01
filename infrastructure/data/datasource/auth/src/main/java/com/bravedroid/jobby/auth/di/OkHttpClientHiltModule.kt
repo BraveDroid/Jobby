@@ -1,5 +1,6 @@
 package com.bravedroid.jobby.auth.di
 
+import com.bravedroid.jobby.auth.AuthenticationInterceptor
 import com.bravedroid.jobby.logger.NetworkLogger
 import dagger.Module
 import dagger.Provides
@@ -17,8 +18,12 @@ abstract class OkHttpClientHiltModule
 class OkHttpClientBuilderHiltModule {
     @Singleton
     @Provides
-    fun providesOkHttpClient(networkLogger: NetworkLogger): OkHttpClient =
+    fun providesOkHttpClient(
+        networkLogger: NetworkLogger,
+        tokenProvider: TokenProvider
+    ): OkHttpClient =
         OkHttpClient.Builder()
+            .addInterceptor(AuthenticationInterceptor(tokenProvider))
             .addInterceptor(networkLogger.applicationLoggingInterceptor)
             .addNetworkInterceptor(networkLogger.networkLoggingInterceptor)
             .build()

@@ -15,7 +15,7 @@ import javax.inject.Inject
 class TimberLogger @Inject constructor(
     @ApplicationContext private val context: Context
 ) : Logger, NetworkLogger {
-    override fun log(msg: String, tag: String, priority: Priority) = with(Timber.tag(tag)) {
+    override fun log(tag: String, msg: String,  priority: Priority) = with(Timber.tag(tag)) {
         when (priority) {
             Priority.V -> v(msg)
             Priority.D -> d(msg)
@@ -23,6 +23,10 @@ class TimberLogger @Inject constructor(
             Priority.W -> w(msg)
             Priority.E -> e(msg)
         }
+    }
+
+    override fun log(tag: String, t: Throwable) {
+        Timber.tag(tag).e(t)
     }
 
     override fun init() {
@@ -33,7 +37,7 @@ class TimberLogger @Inject constructor(
     override val networkLoggingInterceptor: Interceptor = StethoInterceptor()
 
     override val applicationLoggingInterceptor: Interceptor = HttpLoggingInterceptor {
-         log(msg = it, tag = "HttpLoggingInterceptor", priority = Priority.D)
+        log(tag = "HttpLoggingInterceptor", msg = it)
     }.apply {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }

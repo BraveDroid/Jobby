@@ -1,8 +1,8 @@
 package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork
 
 import com.bravedroid.jobby.domain.entities.Job
-import com.bravedroid.jobby.domain.utils.Result
-import com.bravedroid.jobby.domain.utils.Result.Companion.isSucceeded
+import com.bravedroid.jobby.domain.utils.DomainResult
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.isSucceeded
 import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkService
 import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkServiceFake
 import com.google.common.truth.Truth
@@ -27,7 +27,7 @@ class NetworkDataSourceTest {
         val resultFlow = sut.fetchJobs()
         val result = resultFlow.single()
         Truth.assertThat(result.isSucceeded).isTrue()
-        result as Result.Success
+        result as DomainResult.Success
         val jobs = result.data
         val job = Job(
             id = 98824,
@@ -54,7 +54,7 @@ class NetworkDataSourceTest {
         val result = resultFlow.single()
 
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as Result.Error.Unknown
+        result as DomainResult.Error.Unknown
         val jobs = result.throwable
 
         Truth.assertThat(jobs.message).contains("error")

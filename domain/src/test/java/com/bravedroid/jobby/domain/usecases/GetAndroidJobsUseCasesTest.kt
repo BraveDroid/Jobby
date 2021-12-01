@@ -2,11 +2,11 @@ package com.bravedroid.jobby.domain.usecases
 
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.repository.JobsRepository
-import com.bravedroid.jobby.domain.utils.Result
-import com.bravedroid.jobby.domain.utils.Result.Companion.asFlow
-import com.bravedroid.jobby.domain.utils.Result.Companion.getData
-import com.bravedroid.jobby.domain.utils.Result.Companion.toResultErrorUnknown
-import com.bravedroid.jobby.domain.utils.Result.Companion.toResultSuccess
+import com.bravedroid.jobby.domain.utils.DomainResult
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.asFlow
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.getData
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultErrorUnknown
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultSuccess
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.single
@@ -69,6 +69,6 @@ class GetAndroidJobsUseCasesTest {
         sut = GetAndroidJobsUseCase(jobsRepositoryMock)
         val result = sut.invoke().single()
 
-        Truth.assertThat(result).isInstanceOf(Result.Error.Unknown::class.java)
+        Truth.assertThat(result).isInstanceOf(DomainResult.Error.Unknown::class.java)
     }
 }

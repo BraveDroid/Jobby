@@ -8,8 +8,8 @@ import com.bravedroid.jobby.auth.dto.register.RegisterRequestDto
 import com.bravedroid.jobby.auth.dto.register.RegisterResponseDto
 import com.bravedroid.jobby.auth.service.AuthService
 import com.bravedroid.jobby.auth.service.AuthServiceFake
-import com.bravedroid.jobby.domain.utils.Result
-import com.bravedroid.jobby.domain.utils.Result.Companion.isSucceeded
+import com.bravedroid.jobby.domain.utils.DomainResult
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.isSucceeded
 import com.google.common.truth.Truth
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
@@ -43,7 +42,7 @@ class AuthDataSourceTest : TestCase() {
         val result = resultFlow.single()
         Truth.assertThat(result.isSucceeded).isTrue()
 
-        result as Result.Success
+        result as DomainResult.Success
         val response = result.data
         Truth.assertThat(response).isEqualTo(
             RegisterResponseDto(
@@ -72,7 +71,7 @@ class AuthDataSourceTest : TestCase() {
         val result = resultFlow.single()
 
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as Result.Error.Unknown
+        result as DomainResult.Error.Unknown
         val response = result.throwable
         Truth.assertThat(response.message).contains("error")
 
@@ -93,7 +92,7 @@ class AuthDataSourceTest : TestCase() {
         val result = resultFlow.single()
         Truth.assertThat(result.isSucceeded).isTrue()
 
-        result as Result.Success
+        result as DomainResult.Success
         val response = result.data
         Truth.assertThat(response).isEqualTo(
             LoginResponseDto(
@@ -124,7 +123,7 @@ class AuthDataSourceTest : TestCase() {
         val result = resultFlow.single()
 
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as Result.Error.Unknown
+        result as DomainResult.Error.Unknown
         val response = result.throwable
         Truth.assertThat(response.message).contains("error")
     }
@@ -143,7 +142,7 @@ class AuthDataSourceTest : TestCase() {
         val result = resultFlow.single()
         Truth.assertThat(result.isSucceeded).isTrue()
 
-        result as Result.Success
+        result as DomainResult.Success
         val response = result.data
         Truth.assertThat(response).isEqualTo(
             RefreshTokenResponseDto(
@@ -170,7 +169,7 @@ class AuthDataSourceTest : TestCase() {
         val result = resultFlow.single()
 
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as Result.Error.Unknown
+        result as DomainResult.Error.Unknown
         val response = result.throwable
         Truth.assertThat(response.message).contains("error")
     }
