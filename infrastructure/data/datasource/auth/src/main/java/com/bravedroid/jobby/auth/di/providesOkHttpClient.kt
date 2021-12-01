@@ -1,5 +1,6 @@
 package com.bravedroid.jobby.auth.di
 
+import com.bravedroid.jobby.logger.NetworkLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +17,9 @@ abstract class OkHttpClientHiltModule
 class OkHttpClientBuilderHiltModule {
     @Singleton
     @Provides
-    fun providesOkHttpClient(): OkHttpClient =
+    fun providesOkHttpClient(networkLogger: NetworkLogger): OkHttpClient =
         OkHttpClient.Builder()
-            // TODO: 09/11/2021 RF: support cache and network interceptor for debugging tools, headers...
+            .addInterceptor(networkLogger.applicationLoggingInterceptor)
+            .addNetworkInterceptor(networkLogger.networkLoggingInterceptor)
             .build()
 }

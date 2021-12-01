@@ -50,4 +50,9 @@ object Versions {
     const val compose ="1.0.1"
     const val activity_compose ="1.3.0-alpha06"
 
+    //log & debug
+    const val timber ="5.0.1"
+    const val stetho ="1.6.0"
+    const val stethoOkhttp3 ="1.6.0"
+
 }

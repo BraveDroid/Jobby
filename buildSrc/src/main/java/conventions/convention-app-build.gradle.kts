@@ -71,12 +71,17 @@ dependencies {
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:${Versions.kotlinx_serialization_converter}")
     implementation("com.google.code.gson:gson:${Versions.gson}")
     implementation("org.danilopianini:gson-extras:${Versions.gson_extra}")
-    implementation("com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}")
     implementation("com.squareup.okhttp3:okhttp:${Versions.okhttp}")
     implementation("androidx.room:room-runtime:${Versions.room}")
     kapt("androidx.room:room-compiler:${Versions.room}")
     implementation("androidx.room:room-ktx:${Versions.room}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}")
+
+    //log & debug
+    implementation("com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}")
+    implementation ("com.jakewharton.timber:timber:${Versions.timber}")
+    implementation ("com.facebook.stetho:stetho:${Versions.stetho}")
+    implementation ("com.facebook.stetho:stetho-okhttp3:${Versions.stethoOkhttp3}")
 
     //test
     //jvm-testsVersions
