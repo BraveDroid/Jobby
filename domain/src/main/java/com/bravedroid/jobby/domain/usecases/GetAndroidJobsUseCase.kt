@@ -28,5 +28,4 @@ class GetAndroidJobsUseCase @Inject constructor(
         val remoteJobs: List<Job>,
         val nonRemoteJobs: List<Job>,
     )
-
 }
