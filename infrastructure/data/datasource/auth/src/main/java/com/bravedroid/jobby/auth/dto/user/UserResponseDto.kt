@@ -10,7 +10,7 @@ data class UserResponseDto(
     @SerialName("email")
     val email: String = "",
     @SerialName("name")
-    val name: String = ""
+    val name: String = "",
 ) {
     companion object {
         fun UserResponseDto.toUser(): Profile {

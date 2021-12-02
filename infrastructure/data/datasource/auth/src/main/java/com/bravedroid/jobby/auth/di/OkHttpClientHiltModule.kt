@@ -20,7 +20,7 @@ class OkHttpClientBuilderHiltModule {
     @Provides
     fun providesOkHttpClient(
         networkLogger: NetworkLogger,
-        tokenProvider: TokenProvider
+        tokenProvider: TokenProvider,
     ): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(AuthenticationInterceptor(tokenProvider))

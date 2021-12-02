@@ -8,7 +8,9 @@ import com.bravedroid.jobby.auth.dto.register.RegisterRequestDto
 import com.bravedroid.jobby.auth.dto.register.RegisterResponseDto
 import com.bravedroid.jobby.auth.service.AuthService
 import com.bravedroid.jobby.auth.service.AuthServiceFake
+import com.bravedroid.jobby.domain.entities.ErrorEntity
 import com.bravedroid.jobby.domain.utils.DomainResult
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.getErrorOrNull
 import com.bravedroid.jobby.domain.utils.DomainResult.Companion.isSucceeded
 import com.google.common.truth.Truth
 import junit.framework.TestCase
@@ -19,6 +21,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import retrofit2.HttpException
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
@@ -29,7 +32,7 @@ class AuthDataSourceTest : TestCase() {
     @Test
     fun testRegisterUser() = runTest {
         val authServiceFake = AuthServiceFake()
-        sut = AuthDataSource(authServiceFake)
+        sut = AuthDataSource(authServiceFake, ErrorHandlerImpl())
 
         val resultFlow = sut.registerUser(
             RegisterRequestDto(
@@ -52,7 +55,7 @@ class AuthDataSourceTest : TestCase() {
     }
 
     @Test
-    fun `testRegisterUser error case ` () = runTest {
+    fun `testRegisterUser error case `() = runTest {
         val authServiceMock = mock(AuthService::class.java)
         `when`(authServiceMock.registerUser(
             RegisterRequestDto(
@@ -61,26 +64,28 @@ class AuthDataSourceTest : TestCase() {
                 password = "User",
             )
         )).thenThrow(RuntimeException("error"))
-        sut = AuthDataSource(authServiceMock)
 
-       val resultFlow = sut.registerUser(RegisterRequestDto(
+        sut = AuthDataSource(authServiceMock, ErrorHandlerImpl())
+
+        val resultFlow = sut.registerUser(RegisterRequestDto(
             email = "UserB@gmail.com",
             name = "UserB",
             password = "User",
         ))
+
         val result = resultFlow.single()
 
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as DomainResult.Error.Unknown
-        val response = result.throwable
-        Truth.assertThat(response.message).contains("error")
+        Truth.assertThat(result is DomainResult.Error).isTrue()
+
+        Truth.assertThat(result.getErrorOrNull()).isEqualTo(ErrorEntity.Unknown)
 
     }
 
     @Test
     fun testLoginUser() = runTest {
         val authServiceFake = AuthServiceFake()
-        sut = AuthDataSource(authServiceFake)
+        sut = AuthDataSource(authServiceFake, ErrorHandlerImpl())
 
         val resultFlow = sut.loginUser(
             LoginRequestDto(
@@ -104,7 +109,7 @@ class AuthDataSourceTest : TestCase() {
     }
 
     @Test
-    fun `testLoginUser error case ` () = runTest {
+    fun `testLoginUser error case `() = runTest {
         val authServiceMock = mock(AuthService::class.java)
         `when`(authServiceMock.loginUser(
             LoginRequestDto(
@@ -112,26 +117,23 @@ class AuthDataSourceTest : TestCase() {
                 password = "User",
             )
         )).thenThrow(RuntimeException("error"))
-        sut = AuthDataSource(authServiceMock)
+        sut = AuthDataSource(authServiceMock, ErrorHandlerImpl())
 
         val resultFlow = sut.loginUser(
             LoginRequestDto(
-            email = "UserB@gmail.com",
-            password = "User",
-        )
+                email = "UserB@gmail.com",
+                password = "User",
+            )
         )
         val result = resultFlow.single()
-
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as DomainResult.Error.Unknown
-        val response = result.throwable
-        Truth.assertThat(response.message).contains("error")
+        Truth.assertThat(result.getErrorOrNull()).isEqualTo(ErrorEntity.Unknown)
     }
 
     @Test
     fun testRefreshToken() = runTest {
         val authServiceFake = AuthServiceFake()
-        sut = AuthDataSource(authServiceFake)
+        sut = AuthDataSource(authServiceFake, ErrorHandlerImpl())
 
         val resultFlow = sut.refreshToken(
             RefreshTokenRequestDto(
@@ -153,24 +155,27 @@ class AuthDataSourceTest : TestCase() {
     }
 
     @Test
-    fun `test check refreshToken error case` () = runTest {
+    fun `test check refreshToken error case`() = runTest {
+
+        val httpExceptionMock = mock(HttpException::class.java)
+        `when`(httpExceptionMock.code()).thenReturn(404)
+
         val authServiceMock = mock(AuthService::class.java)
         `when`(authServiceMock.refreshToken(
             RefreshTokenRequestDto(
                 refreshToken = "refresh Token",
             )
-        )).thenThrow(RuntimeException("error"))
-        sut = AuthDataSource(authServiceMock)
+        )).thenThrow(httpExceptionMock)
+
+        sut = AuthDataSource(authServiceMock, ErrorHandlerImpl())
 
         val resultFlow = sut.refreshToken(
             RefreshTokenRequestDto(
                 refreshToken = "refresh Token",
-        ))
+            ))
         val result = resultFlow.single()
 
         Truth.assertThat(result.isSucceeded).isFalse()
-        result as DomainResult.Error.Unknown
-        val response = result.throwable
-        Truth.assertThat(response.message).contains("error")
+        Truth.assertThat(result.getErrorOrNull()).isEqualTo(ErrorEntity.NotFound)
     }
 }

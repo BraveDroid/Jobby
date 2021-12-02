@@ -36,7 +36,7 @@ sealed class DomainResult<out R> {
         * Returns the encapsulated result of the given transform function applied to the encapsulated value if this instance
         * represents success or the original encapsulated Throwable exception if it is failure.
         */
-        inline fun <R, T> DomainResult<T>.mapToSuccessOrUnknownError(transform: (value: T) -> R): DomainResult<R> =
+        inline fun <R, T> DomainResult<T>.mapToResultSuccessOrKeepSameResultError(transform: (value: T) -> R): DomainResult<R> =
             when (this) {
                 is DomainResult.Success -> {
                     tryMapping { transform(data) }
@@ -44,7 +44,8 @@ sealed class DomainResult<out R> {
                 is DomainResult.Error -> this
             }
 
-        inline fun <R, T> DomainResult<T>.tryMapping(transform: (value: T) -> R): DomainResult<R> {
+        @PublishedApi
+        internal inline fun <R, T> DomainResult<T>.tryMapping(transform: (value: T) -> R): DomainResult<R> {
             return when (this) {
                 is DomainResult.Success -> {
                     try {
@@ -89,6 +90,12 @@ sealed class DomainResult<out R> {
         fun <T> DomainResult<T>.getDataOrNull(): T? =
             if (this is DomainResult.Success)
                 this.data
+            else
+                null
+
+        fun <T> DomainResult<T>.getErrorOrNull(): ErrorEntity? =
+            if (this is DomainResult.Error)
+                this.errorEntity
             else
                 null
 

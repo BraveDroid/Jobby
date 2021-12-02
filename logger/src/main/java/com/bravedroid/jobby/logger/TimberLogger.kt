@@ -1,7 +1,6 @@
 package com.bravedroid.jobby.logger
 
 import android.content.Context
-import android.util.Log
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.facebook.stetho.Stetho
@@ -13,9 +12,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class TimberLogger @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : Logger, NetworkLogger {
-    override fun log(tag: String, msg: String,  priority: Priority) = with(Timber.tag(tag)) {
+    override fun log(tag: String, msg: String, priority: Priority) = with(Timber.tag(tag)) {
         when (priority) {
             Priority.V -> v(msg)
             Priority.D -> d(msg)

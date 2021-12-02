@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RegisterUserUseCase @Inject constructor(
-    private val authentication: Authentication
+    private val authentication: Authentication,
 ) {
     operator fun invoke(registrationRequest: RegistrationRequest): Flow<DomainResult<RegistrationResponse>> =
         authentication.register(registrationRequest)
@@ -19,6 +19,6 @@ class RegisterUserUseCase @Inject constructor(
 
     sealed interface RegistrationResponse {
         object Registered : RegistrationResponse
-        class NotRegisteredException (t:Throwable): RegistrationResponse,RuntimeException(t)
+        class NotRegisteredException(t: Throwable) : RegistrationResponse, RuntimeException(t)
     }
 }

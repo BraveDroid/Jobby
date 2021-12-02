@@ -35,7 +35,7 @@ class JobsViewModel @Inject constructor(
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-     fun loadJobs() {
+    fun loadJobs() {
         coroutineProvider.provideViewModelScope(this).launch {
             getAndroidJobsUseCase().catch { t ->
                 emit(ErrorEntity.Unknown.toResultError())
@@ -45,7 +45,7 @@ class JobsViewModel @Inject constructor(
                         _pageStateFlow.value = PageState.Error
                         _uiEventFlow.emit(
                             UiEvent.ShowError(
-                                  "Unknown Error !"
+                                "Unknown Error !"
                             )
                         )
                     }

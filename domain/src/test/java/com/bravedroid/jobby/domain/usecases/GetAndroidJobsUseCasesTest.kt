@@ -1,11 +1,11 @@
 package com.bravedroid.jobby.domain.usecases
 
+import com.bravedroid.jobby.domain.entities.ErrorEntity
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.repository.JobsRepository
 import com.bravedroid.jobby.domain.utils.DomainResult
 import com.bravedroid.jobby.domain.utils.DomainResult.Companion.asFlow
-import com.bravedroid.jobby.domain.utils.DomainResult.Companion.getData
-import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultErrorUnknown
+import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultError
 import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultSuccess
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +51,7 @@ class GetAndroidJobsUseCasesTest {
         `when`(jobsRepositoryMock.getAndroidJobs()).thenReturn(jobList.toResultSuccess().asFlow())
         sut = GetAndroidJobsUseCase(jobsRepositoryMock)
 
-        val result = sut.invoke().single().getData()
+        val result = (sut.invoke().single() as DomainResult.Success).data
         val expected: GetAndroidJobsUseCase.GetAndroidJobsResponse =
             GetAndroidJobsUseCase.GetAndroidJobsResponse(listOf(remoteJob), listOf(nonRemoteJob))
 
@@ -63,12 +63,13 @@ class GetAndroidJobsUseCasesTest {
     fun `invoke android jobs uesCases error result `() = runTest {
         val jobsRepositoryMock = mock(JobsRepository::class.java)
         `when`(jobsRepositoryMock.getAndroidJobs()).thenReturn(
-            RuntimeException().toResultErrorUnknown().asFlow()
+            ErrorEntity.Unknown.toResultError().asFlow()
         )
 
         sut = GetAndroidJobsUseCase(jobsRepositoryMock)
         val result = sut.invoke().single()
 
-        Truth.assertThat(result).isInstanceOf(DomainResult.Error.Unknown::class.java)
+        Truth.assertThat(result is DomainResult.Error).isTrue()
+        Truth.assertThat((result as DomainResult.Error).errorEntity).isEqualTo(ErrorEntity.Unknown)
     }
 }

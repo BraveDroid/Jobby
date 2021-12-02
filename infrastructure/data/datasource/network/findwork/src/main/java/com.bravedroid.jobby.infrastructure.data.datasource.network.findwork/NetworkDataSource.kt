@@ -1,4 +1,5 @@
 package com.bravedroid.jobby.infrastructure.data.datasource.network.findwork
+
 import com.bravedroid.jobby.domain.entities.Job
 import com.bravedroid.jobby.domain.utils.DomainResult
 import com.bravedroid.jobby.domain.utils.DomainResult.Companion.toResultError

@@ -13,7 +13,6 @@ import com.bravedroid.jobby.presentation.features.jobs.JobsViewModel
 import com.bravedroid.jobby.presentation.util.PageState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -22,7 +21,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CompanionActivity : AppCompatActivity() {
 
-    private  val viewModel: JobsViewModel by viewModels()
+    private val viewModel: JobsViewModel by viewModels()
 
     @Inject
     internal lateinit var jobsAdapter: JobsAdapter
