@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.datasource
 
 import com.bravedroid.jobby.auth.dto.user.UserResponseDto
 import com.bravedroid.jobby.auth.service.UserService

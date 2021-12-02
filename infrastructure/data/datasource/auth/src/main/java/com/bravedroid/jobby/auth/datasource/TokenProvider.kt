@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.datasource
 
 import javax.inject.Inject
 

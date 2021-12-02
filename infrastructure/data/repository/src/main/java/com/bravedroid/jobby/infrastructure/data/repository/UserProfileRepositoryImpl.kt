@@ -1,6 +1,6 @@
 package com.bravedroid.jobby.infrastructure.data.repository
 
-import com.bravedroid.jobby.auth.UserDataSource
+import com.bravedroid.jobby.auth.datasource.UserDataSource
 import com.bravedroid.jobby.domain.entities.Profile
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.repository.UserProfileRepository
