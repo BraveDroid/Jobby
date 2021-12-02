@@ -14,8 +14,10 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.Ignore
 import org.junit.Test
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
+import org.mockito.internal.matchers.InstanceOf
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 @ExperimentalSerializationApi
 @ExperimentalCoroutinesApi
@@ -49,20 +51,21 @@ class NetworkDataSourceTest {
         Truth.assertThat(jobs).contains(job)
     }
 
-    @Test @Ignore
-    fun `fetchJobsTest error case`() = runTest {
-     //  `when`(findWorkServiceMock.getJobs()).thenThrow(RuntimeException("error"))
-     //  `when`(errorHandlerMock.handle())).thenThrow(RuntimeException("error"))
-     //   sut = NetworkDataSource(findWorkServiceMock, errorHandlerMock)
+    @Test
+    fun `fetchJobsTest error case`() {
+        runTest {
+        val runtimeException = RuntimeException("error")
+            whenever(findWorkServiceMock.getJobs()).thenThrow(runtimeException)
+            whenever(errorHandlerMock.handle(runtimeException)).thenReturn(ErrorEntity.Unknown)
+            sut = NetworkDataSource(findWorkServiceMock, errorHandlerMock)
 
-     //  val resultFlow = sut.fetchJobs()
-     //  val result = resultFlow.single()
+            val resultFlow = sut.fetchJobs()
+            val result = resultFlow.single()
 
-     //  Truth.assertThat(result.isSucceeded).isFalse()
-     //  result as DomainResult.Error
-     //  val error = result.errorEntity
-
-     //  Truth.assertThat(error).isEqualTo(ErrorEntity.Unknown)
+            Truth.assertThat(result.isSucceeded).isFalse()
+            result as DomainResult.Error
+            verify(errorHandlerMock).handle(runtimeException)
+        }
     }
 }
 

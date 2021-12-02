@@ -19,6 +19,5 @@ class RegisterUserUseCase @Inject constructor(
 
     sealed interface RegistrationResponse {
         object Registered : RegistrationResponse
-        class NotRegisteredException(t: Throwable) : RegistrationResponse, RuntimeException(t)
     }
 }

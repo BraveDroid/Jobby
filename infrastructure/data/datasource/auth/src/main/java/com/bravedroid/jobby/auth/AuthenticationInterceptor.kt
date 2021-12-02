@@ -1,6 +1,5 @@
 package com.bravedroid.jobby.auth
 
-import com.bravedroid.jobby.auth.di.TokenProvider
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response

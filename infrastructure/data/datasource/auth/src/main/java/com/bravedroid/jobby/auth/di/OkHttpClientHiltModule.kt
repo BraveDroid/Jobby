@@ -1,6 +1,7 @@
 package com.bravedroid.jobby.auth.di
 
 import com.bravedroid.jobby.auth.AuthenticationInterceptor
+import com.bravedroid.jobby.auth.TokenProvider
 import com.bravedroid.jobby.logger.NetworkLogger
 import dagger.Module
 import dagger.Provides
