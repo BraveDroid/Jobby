@@ -2,8 +2,8 @@
 object Versions {
     const val applicationId = "com.bravedroid.jobby"
     //apiSDK
-    const val compileSdk = 30
-    const val targetSdk = 30
+    const val compileSdk = 31
+    const val targetSdk = 31
     const val minSdk = 23
 
     //androidx

@@ -1,13 +1,13 @@
 package com.bravedroid.jobby.companion.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.bravedroid.jobby.companion.PageState
 import com.bravedroid.jobby.companion.databinding.ActivityRegisterBinding
 import com.bravedroid.jobby.companion.vm.RegisterViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -24,7 +24,11 @@ class RegisterActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        binding.goToLoginBtn.setOnClickListener {
+            navigateToLogin()
+        }
         binding.registerBtn.setOnClickListener {
+            it.isEnabled = false
             viewModel.register(
                 RegisterViewModel.RegisterUiModel(
                     email = binding.editTextEmail.text.toString(),
@@ -34,20 +38,27 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
 
-        viewModel.pageStateFlow.onEach {
+        viewModel.uiEventFlow.onEach {
             when (it) {
-                is PageState.Content -> {
-                    TODO("")
+                RegisterViewModel.UiEvent.NavigationToLoginScreen -> {
+                    Snackbar.make(binding.root, "$it", LENGTH_SHORT).show()
+                    navigateToLogin()
                 }
-                PageState.Error -> {
-                    TODO()
-                }
-                PageState.Loading -> {
-                    TODO()
+                is RegisterViewModel.UiEvent.ShowError -> {
+                    Snackbar.make(binding.root, "$it", LENGTH_SHORT).show()
                 }
             }
+            binding.registerBtn.isEnabled = true
         }.launchIn(lifecycleScope)
 
+    }
+
+    private fun navigateToLogin() {
+        with(
+            Intent(this@RegisterActivity, LoginActivity::class.java)
+        ) {
+            startActivity(this)
+        }
     }
 }
 

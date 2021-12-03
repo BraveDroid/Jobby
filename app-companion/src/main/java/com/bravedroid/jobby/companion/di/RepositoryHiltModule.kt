@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.di
+package com.bravedroid.jobby.companion.di
 
 import com.bravedroid.jobby.auth.AuthenticationImpl
 import com.bravedroid.jobby.domain.auth.Authentication

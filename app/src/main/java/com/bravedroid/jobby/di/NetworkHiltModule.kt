@@ -1,6 +1,7 @@
 package com.bravedroid.jobby.di
 
 import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.FindWorkConstants.BASE_URL
+import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.di.FindWorkRetrofit
 import com.bravedroid.jobby.infrastructure.data.datasource.network.findwork.service.FindWorkService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -23,6 +24,7 @@ class NetworkBuilderHiltModule {
 
     @Singleton
     @Provides
+    @FindWorkRetrofit
     fun providesRetrofit(
         okHttpClient: OkHttpClient,
     ): Retrofit = Retrofit.Builder()
@@ -37,6 +39,6 @@ class NetworkBuilderHiltModule {
 
     @Singleton
     @Provides
-    fun providesFindWorkService(retrofit: Retrofit): FindWorkService =
+    fun providesFindWorkService(@FindWorkRetrofit retrofit: Retrofit): FindWorkService =
         retrofit.create(FindWorkService::class.java)
 }
