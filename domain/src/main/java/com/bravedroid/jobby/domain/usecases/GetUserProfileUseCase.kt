@@ -9,13 +9,7 @@ import javax.inject.Inject
 class GetUserProfileUseCase @Inject constructor(
     private val userProfileRepository: UserProfileRepository,
 ){
-    operator fun invoke(userProfileRequest: UserProfileRequest): Flow<DomainResult<Profile>> =
-        userProfileRepository.getProfileUser(userProfileRequest)
-
-    data class UserProfileRequest(
-        val email: String,
-        val name: String,
-        val password: String,
-    )
+    operator fun invoke(): Flow<DomainResult<Profile>> =
+        userProfileRepository.getProfileUser()
 
 }

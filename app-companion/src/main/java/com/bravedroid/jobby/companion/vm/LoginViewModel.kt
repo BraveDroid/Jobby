@@ -1,6 +1,7 @@
 package com.bravedroid.jobby.companion.vm
 
 import androidx.lifecycle.ViewModel
+import com.bravedroid.jobby.auth.datasource.TokenProvider
 import com.bravedroid.jobby.companion.CoroutineProvider
 import com.bravedroid.jobby.companion.vm.LoginViewModel.UiEvent
 import com.bravedroid.jobby.domain.log.Logger

@@ -1,14 +1,16 @@
 package com.bravedroid.jobby.companion.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import com.bravedroid.jobby.companion.R
-import com.bravedroid.jobby.companion.databinding.ActivityLoginBinding
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bravedroid.jobby.companion.databinding.ActivityUserProfileBinding
-import com.bravedroid.jobby.companion.vm.RegisterViewModel
 import com.bravedroid.jobby.companion.vm.UserProfileViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class UserProfileActivity : AppCompatActivity() {
@@ -22,8 +24,22 @@ class UserProfileActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.textView.text=""
-        binding.textView2.text=""
+        viewModel.uiEventFlow.onEach {
+            when (it) {
+                is UserProfileViewModel.UiEvent.ShowError -> {
+                    Snackbar.make(binding.root, "$it", LENGTH_SHORT).show()
+                }
+                is UserProfileViewModel.UiEvent.UserProfileUiModel -> {
+                    binding.userNameValueTextView.text = it.name
+                    binding.emailValueTextView.text = it.email
+                }
+            }
+        }.launchIn(lifecycleScope)
 
+        viewModel.findUser()
+
+        binding.refreshBtn.setOnClickListener {
+            viewModel.findUser()
+        }
     }
 }

@@ -12,11 +12,14 @@ class AuthenticationInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val oldRequest = chain.request()
         var newRequest: Request = oldRequest
-        if (isJobbyServerRequest(oldRequest)) {
-            newRequest = oldRequest.newBuilder()
-                .addHeader("Authorization", "Bearer ${tokenProvider.accessToken}")
-                .build()
-        }
+
+            if (isJobbyServerRequest(oldRequest)) {
+                newRequest = oldRequest.newBuilder()
+                    .addHeader("Authorization", "Bearer ${tokenProvider.accessToken}")
+                    .build()
+            }
+
+
         return chain.proceed(newRequest)
     }
 
