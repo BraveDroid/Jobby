@@ -1,14 +1,17 @@
 package com.bravedroid.jobby.companion.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import com.bravedroid.jobby.companion.R
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bravedroid.jobby.companion.databinding.ActivityLoginBinding
-import com.bravedroid.jobby.companion.databinding.ActivityRegisterBinding
 import com.bravedroid.jobby.companion.vm.LoginViewModel
-import com.bravedroid.jobby.companion.vm.RegisterViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -21,12 +24,35 @@ class LoginActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.button3.setOnClickListener {
-
+        binding.loginBtn.setOnClickListener {
+            it.isEnabled = false
+            viewModel.login(
+                LoginViewModel.LoginUiModel(
+                    email = binding.emailEditText.text.toString(),
+                    password = binding.passwordEditText.text.toString(),
+                )
+            )
         }
 
-        binding.editTextTextEmailAddress2.text
+        viewModel.uiEventFlow.onEach {
+            when (it) {
+                LoginViewModel.UiEvent.NavigationToUserProfile -> {
+                    Snackbar.make(binding.root, "$it", BaseTransientBottomBar.LENGTH_SHORT).show()
+                    navigateToUserProfile()
+                }
+                is LoginViewModel.UiEvent.ShowError -> {
+                    Snackbar.make(binding.root, "$it", BaseTransientBottomBar.LENGTH_SHORT).show()
+                }
+            }
+            binding.loginBtn.isEnabled = true
+        }.launchIn(lifecycleScope)
+    }
 
-        binding.editTextTextPassword2.text
+    private fun navigateToUserProfile() {
+        with(
+            Intent(this@LoginActivity, UserProfileActivity::class.java)
+        ) {
+            startActivity(this)
+        }
     }
 }
