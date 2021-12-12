@@ -38,7 +38,6 @@ class AuthenticationImpl @Inject constructor(
     }
 
     override fun login(loginRequest: LoginRequest): Flow<DomainResult<LoginResponse>> {
-
         return authDataSource.loginUser(loginRequest.toLoginRequestDto())
             .map { result ->
                 result.mapToResultSuccessOrKeepSameResultError {
@@ -47,6 +46,7 @@ class AuthenticationImpl @Inject constructor(
                         msg = "${(result.getDataOrNull() ?: "No Data")}"
                     )
                     tokenProvider.accessToken = it.accessToken
+                    tokenProvider.refreshToken = it.refreshToken
                     LoginResponse.LoggedIn
                 }
             }

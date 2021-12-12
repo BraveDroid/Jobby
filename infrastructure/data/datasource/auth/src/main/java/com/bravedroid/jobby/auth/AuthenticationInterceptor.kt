@@ -18,9 +18,8 @@ class AuthenticationInterceptor @Inject constructor(
                     .addHeader("Authorization", "Bearer ${tokenProvider.accessToken}")
                     .build()
             }
-
-
-        return chain.proceed(newRequest)
+        val response = chain.proceed(newRequest)
+        return response
     }
 
     private fun isJobbyServerRequest(oldRequest: Request) =
