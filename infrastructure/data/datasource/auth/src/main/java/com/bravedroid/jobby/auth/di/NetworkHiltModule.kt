@@ -2,6 +2,7 @@ package com.bravedroid.jobby.auth.di
 
 import com.bravedroid.jobby.auth.AuthServiceConstants.BASE_URL
 import com.bravedroid.jobby.auth.AuthenticationInterceptor
+import com.bravedroid.jobby.auth.RefreshTokenInterceptor
 import com.bravedroid.jobby.auth.datasource.AuthDataSource
 import com.bravedroid.jobby.auth.datasource.TokenProvider
 import com.bravedroid.jobby.auth.dto.refreshtoken.RefreshTokenRequestDto
@@ -50,56 +51,7 @@ class NetworkBuilderHiltModule {
             .readTimeout(5, TimeUnit.MINUTES)
             .callTimeout(5, TimeUnit.MINUTES)
             .addInterceptor(AuthenticationInterceptor(tokenProvider))
-            .addInterceptor(Interceptor { chain ->
-                val request = chain.request()
-                var response = chain.proceed(request)
-                logger.log(tag = "OkHttp", msg = " Before Start RunBlocking ")
-                logger.log(tag = "OkHttp", msg = " current thread ${Thread.currentThread().name} ")
-                runBlocking {
-                    logger.log(tag = "OkHttp", msg = " current thread runBlocking ${Thread.currentThread().name} ")
-                    if (response.code == 401) {
-                        response.body?.close()
-                        logger.log(tag = "OkHttp", msg = "response.code == 401")
-                        logger.log(tag = "OkHttp", msg = " current thread ${Thread.currentThread().name} ")
-                        authDataSource.get().refreshToken(
-                            RefreshTokenRequestDto(
-                                tokenProvider.refreshToken
-                            )
-                        ).catch { e -> logger.log(tag = "OkHttp", t = e) }
-                            .collect {
-                            logger.log(tag = "OkHttp", msg = " current thread collect${Thread.currentThread().name} ")
-                            if (it is DomainResult.Success) {
-                                logger.log(
-                                    tag = "OkHttp",
-                                    msg = " Success RefreshTokenResponse "
-                                )
-                                tokenProvider.accessToken = it.data.accessToken
-                                val newRequest = chain.request().newBuilder()
-                                    .removeHeader(
-                                        "Authorization",
-                                    ).addHeader(
-                                        "Authorization",
-                                        "Bearer ${tokenProvider.accessToken}"
-                                    ).build()
-//                                response = withContext(Dispatchers.IO) {
-                                response = chain.proceed(newRequest)
-//                                }
-                            } else if (it is DomainResult.Error) {
-                                logger.log(
-                                    tag = "OkHttp",
-                                    msg = "RefreshTokenResponse contains Error",
-                                    priority = Priority.E
-                                )
-                            }
-                        }
-//                        }
-//                        logger.log(tag = "OkHttp", msg = " End withContext ")
-                    }
-                    logger.log(tag = "OkHttp", msg = " End RunBlocking ")
-                }
-                logger.log(tag = "OkHttp", msg = " after End RunBlocking ")
-                response
-            })
+            .addInterceptor(RefreshTokenInterceptor(authDataSource, tokenProvider, logger))
             .addInterceptor(networkLogger.applicationLoggingInterceptor)
             .addNetworkInterceptor(networkLogger.networkLoggingInterceptor)
             .build()
