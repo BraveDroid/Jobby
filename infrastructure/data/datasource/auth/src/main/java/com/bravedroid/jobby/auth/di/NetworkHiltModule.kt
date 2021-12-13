@@ -10,30 +10,24 @@ import com.bravedroid.jobby.auth.service.UserService
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.domain.utils.DomainResult
-import com.bravedroid.jobby.domain.utils.DomainResult.Companion.getErrorOrNull
 import com.bravedroid.jobby.logger.NetworkLogger
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-import dagger.Lazy
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 
 @Module(includes = [NetworkBuilderHiltModule::class])
 @InstallIn(SingletonComponent::class)
@@ -48,7 +42,6 @@ class NetworkBuilderHiltModule {
         networkLogger: NetworkLogger,
         tokenProvider: TokenProvider,
         authDataSource: Lazy<AuthDataSource>,
-        @ApplicationScope applicationCoroutineScope: CoroutineScope,
         logger: Logger,
     ): OkHttpClient =
         OkHttpClient.Builder()
@@ -61,20 +54,20 @@ class NetworkBuilderHiltModule {
                 val request = chain.request()
                 var response = chain.proceed(request)
                 logger.log(tag = "OkHttp", msg = " Before Start RunBlocking ")
-                runBlocking(applicationCoroutineScope.coroutineContext) {
-//                    logger.log(tag = "OkHttp", msg = " Start RunBlocking ")
-//                    withContext(applicationCoroutineScope.coroutineContext) {
-                    logger.log(tag = "OkHttp", msg = " Start withContext ")
+                logger.log(tag = "OkHttp", msg = " current thread ${Thread.currentThread().name} ")
+                runBlocking {
+                    logger.log(tag = "OkHttp", msg = " current thread runBlocking ${Thread.currentThread().name} ")
                     if (response.code == 401) {
                         response.body?.close()
                         logger.log(tag = "OkHttp", msg = "response.code == 401")
+                        logger.log(tag = "OkHttp", msg = " current thread ${Thread.currentThread().name} ")
                         authDataSource.get().refreshToken(
                             RefreshTokenRequestDto(
                                 tokenProvider.refreshToken
                             )
-                        ).catch { e ->
-                            logger.log(tag = "OkHttp", t = e)
-                        }.collect {
+                        ).catch { e -> logger.log(tag = "OkHttp", t = e) }
+                            .collect {
+                            logger.log(tag = "OkHttp", msg = " current thread collect${Thread.currentThread().name} ")
                             if (it is DomainResult.Success) {
                                 logger.log(
                                     tag = "OkHttp",
