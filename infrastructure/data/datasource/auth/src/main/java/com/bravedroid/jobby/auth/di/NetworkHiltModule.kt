@@ -1,16 +1,13 @@
 package com.bravedroid.jobby.auth.di
 
 import com.bravedroid.jobby.auth.AuthServiceConstants.BASE_URL
-import com.bravedroid.jobby.auth.AuthenticationInterceptor
-import com.bravedroid.jobby.auth.RefreshTokenInterceptor
+import com.bravedroid.jobby.auth.JobbyInterceptor
+import com.bravedroid.jobby.auth.JobbyAuthenticator
 import com.bravedroid.jobby.auth.datasource.AuthDataSource
 import com.bravedroid.jobby.auth.datasource.TokenProvider
-import com.bravedroid.jobby.auth.dto.refreshtoken.RefreshTokenRequestDto
 import com.bravedroid.jobby.auth.service.AuthService
 import com.bravedroid.jobby.auth.service.UserService
 import com.bravedroid.jobby.domain.log.Logger
-import com.bravedroid.jobby.domain.log.Priority
-import com.bravedroid.jobby.domain.utils.DomainResult
 import com.bravedroid.jobby.logger.NetworkLogger
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Lazy
@@ -18,14 +15,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -50,8 +42,8 @@ class NetworkBuilderHiltModule {
             .writeTimeout(5, TimeUnit.MINUTES)
             .readTimeout(5, TimeUnit.MINUTES)
             .callTimeout(5, TimeUnit.MINUTES)
-            .addInterceptor(AuthenticationInterceptor(tokenProvider))
-            .addInterceptor(RefreshTokenInterceptor(authDataSource, tokenProvider, logger))
+            .addInterceptor(JobbyInterceptor(tokenProvider))
+            .authenticator(JobbyAuthenticator(authDataSource, tokenProvider, logger))
             .addInterceptor(networkLogger.applicationLoggingInterceptor)
             .addNetworkInterceptor(networkLogger.networkLoggingInterceptor)
             .build()

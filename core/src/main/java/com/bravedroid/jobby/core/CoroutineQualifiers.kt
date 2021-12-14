@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.auth.di
+package com.bravedroid.jobby.core
 
 import javax.inject.Qualifier
 

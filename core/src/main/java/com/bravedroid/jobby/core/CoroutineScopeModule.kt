@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.auth.di
+package com.bravedroid.jobby.core
 
 import dagger.Module
 import dagger.Provides
@@ -13,10 +13,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class CoroutineScopeModule {
-    @Singleton // Provide always the same instance
+    @Singleton
     @Provides
     fun providesCoroutineScope(): CoroutineScope {
-        // Run this code when providing an instance of CoroutineScope
         return CoroutineScope(SupervisorJob() + Dispatchers.Default)
     }
 
@@ -26,12 +25,4 @@ class CoroutineScopeModule {
     fun providesApplicationCoroutineScope(
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
-
-//    @Singleton
-//    @Provides
-//    fun providesCoroutineScope(
-//        @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
-//    ): CoroutineScope = CoroutineScope(SupervisorJob() + defaultDispatcher)
-
 }
-
