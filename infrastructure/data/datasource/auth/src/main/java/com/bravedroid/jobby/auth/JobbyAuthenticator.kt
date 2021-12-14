@@ -18,9 +18,9 @@ import okhttp3.Route
 import javax.inject.Inject
 
 class JobbyAuthenticator @Inject constructor(
-    val authDataSource: Lazy<AuthDataSource>,
-    val tokenProvider: TokenProvider,
-    val logger: Logger,
+    private val authDataSource: Lazy<AuthDataSource>,
+    private val tokenProvider: TokenProvider,
+    private val logger: Logger,
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         var newRequest: Request? = null

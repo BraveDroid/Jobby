@@ -5,13 +5,11 @@ import javax.inject.Singleton
 
 @Singleton
 class TokenProvider @Inject constructor(
-    private val refreshTokenStore: RefreshTokenStore,
+    private val refreshTokenStore: RefreshTokenStoreSecure,
 ) {
     var refreshToken: String
     get()  = refreshTokenStore.get()
     set(value) = refreshTokenStore.save(value)
 
     var accessToken: String = ""
-
-
 }

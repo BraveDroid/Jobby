@@ -77,6 +77,9 @@ dependencies {
     implementation("androidx.room:room-ktx:${Versions.room}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}")
 
+    //securityCrypto
+    implementation("androidx.security:security-crypto:${Versions.securityCrypto}")
+
     //log & debug
     implementation("com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}")
     implementation ("com.jakewharton.timber:timber:${Versions.timber}")

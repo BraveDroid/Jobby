@@ -55,4 +55,7 @@ object Versions {
     const val stetho ="1.6.0"
     const val stethoOkhttp3 ="1.6.0"
 
+    //security-crypto:1.0.0
+    const val securityCrypto ="1.0.0"
+
 }

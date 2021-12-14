@@ -3,18 +3,16 @@ package com.bravedroid.jobby.auth.datasource
 import android.content.SharedPreferences
 import com.bravedroid.jobby.auth.di.RefreshTokenSharedPreferences
 import com.bravedroid.jobby.auth.di.RefreshTokenSharedPreferencesEditor
+import com.bravedroid.jobby.auth.di.RefreshTokenSharedPreferencesEditorSecure
+import com.bravedroid.jobby.auth.di.RefreshTokenSharedPreferencesSecure
 import javax.inject.Inject
 
-@Deprecated(
-    message = "Use RefreshTokenStoreSecure",
-    replaceWith = ReplaceWith(expression = "RefreshTokenStoreSecure",  "com.bravedroid.jobby.auth.datasource"),
-    level = DeprecationLevel.WARNING)
-class RefreshTokenStore @Inject constructor(
-    @RefreshTokenSharedPreferences private val sharedPreferences: SharedPreferences,
-    @RefreshTokenSharedPreferencesEditor private val sharedPreferencesEditor: SharedPreferences.Editor,
+class RefreshTokenStoreSecure @Inject constructor(
+    @RefreshTokenSharedPreferencesSecure private val sharedPreferences: SharedPreferences,
+    @RefreshTokenSharedPreferencesEditorSecure private val sharedPreferencesEditor: SharedPreferences.Editor,
 ) {
     companion object {
-        const val PERSISTENCE_FILE_NAME = "RefreshTokenStoreFile"
+        const val PERSISTENCE_FILE_NAME_SECURE = "RefreshTokenStoreFileSecure"
         private const val REFRESH_TOKEN = "REFRESH-TOKEN"
     }
 

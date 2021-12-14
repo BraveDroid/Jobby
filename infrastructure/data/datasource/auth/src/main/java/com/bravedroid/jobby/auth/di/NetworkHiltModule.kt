@@ -1,8 +1,9 @@
 package com.bravedroid.jobby.auth.di
 
+import com.bravedroid.jobby.auth.AnalyticsInterceptor
 import com.bravedroid.jobby.auth.AuthServiceConstants.BASE_URL
-import com.bravedroid.jobby.auth.JobbyInterceptor
 import com.bravedroid.jobby.auth.JobbyAuthenticator
+import com.bravedroid.jobby.auth.JobbyInterceptor
 import com.bravedroid.jobby.auth.datasource.AuthDataSource
 import com.bravedroid.jobby.auth.datasource.TokenProvider
 import com.bravedroid.jobby.auth.service.AuthService
@@ -16,8 +17,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -33,17 +34,18 @@ class NetworkBuilderHiltModule {
     @Provides
     fun providesOkHttpClient(
         networkLogger: NetworkLogger,
-        tokenProvider: TokenProvider,
-        authDataSource: Lazy<AuthDataSource>,
-        logger: Logger,
+        jobbyInterceptor: JobbyInterceptor,
+        analyticsInterceptor: AnalyticsInterceptor,
+        jobbyAuthenticator: JobbyAuthenticator,
     ): OkHttpClient =
         OkHttpClient.Builder()
             .connectTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
             .readTimeout(5, TimeUnit.MINUTES)
             .callTimeout(5, TimeUnit.MINUTES)
-            .addInterceptor(JobbyInterceptor(tokenProvider))
-            .authenticator(JobbyAuthenticator(authDataSource, tokenProvider, logger))
+            .addInterceptor(analyticsInterceptor)
+            .addInterceptor(jobbyInterceptor)
+            .authenticator(jobbyAuthenticator)
             .addInterceptor(networkLogger.applicationLoggingInterceptor)
             .addNetworkInterceptor(networkLogger.networkLoggingInterceptor)
             .build()

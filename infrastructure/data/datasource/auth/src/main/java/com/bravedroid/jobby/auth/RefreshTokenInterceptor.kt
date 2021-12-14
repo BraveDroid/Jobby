@@ -22,9 +22,9 @@ import javax.inject.Inject
     replaceWith = ReplaceWith(expression = "JobbyAuthenticator",  "com.bravedroid.jobby.auth"),
     level = DeprecationLevel.WARNING)
  class RefreshTokenInterceptor @Inject constructor(
-    val authDataSource: Lazy<AuthDataSource>,
-    val tokenProvider: TokenProvider,
-    val logger: Logger,
+   private val authDataSource: Lazy<AuthDataSource>,
+   private val tokenProvider: TokenProvider,
+   private val logger: Logger,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
