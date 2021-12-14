@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.interceptors
 
 import android.content.Context
 import android.os.Build

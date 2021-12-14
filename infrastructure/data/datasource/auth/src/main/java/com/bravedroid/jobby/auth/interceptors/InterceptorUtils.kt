@@ -1,5 +1,6 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.interceptors
 
+import com.bravedroid.jobby.auth.AuthServiceConstants
 import okhttp3.Request
 
 object InterceptorUtils {

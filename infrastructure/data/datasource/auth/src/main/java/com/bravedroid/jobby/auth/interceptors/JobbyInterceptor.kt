@@ -1,6 +1,6 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.interceptors
 
-import com.bravedroid.jobby.auth.InterceptorUtils.isJobbyServerRequest
+import com.bravedroid.jobby.auth.interceptors.InterceptorUtils.isJobbyServerRequest
 import com.bravedroid.jobby.auth.datasource.TokenProvider
 import okhttp3.Interceptor
 import okhttp3.Request

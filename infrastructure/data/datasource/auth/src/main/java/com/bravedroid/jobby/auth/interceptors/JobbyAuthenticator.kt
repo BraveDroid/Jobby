@@ -1,7 +1,6 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.interceptors
 
-import com.bravedroid.jobby.auth.InterceptorUtils.isJobbyServerRequest
-import com.bravedroid.jobby.auth.InterceptorUtils.updateHeader
+import com.bravedroid.jobby.auth.interceptors.InterceptorUtils.updateHeader
 import com.bravedroid.jobby.auth.datasource.AuthDataSource
 import com.bravedroid.jobby.auth.datasource.TokenProvider
 import com.bravedroid.jobby.auth.dto.refreshtoken.RefreshTokenRequestDto
@@ -12,38 +11,31 @@ import dagger.Lazy
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
-import okhttp3.Interceptor
+import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
-import java.net.HttpURLConnection
+import okhttp3.Route
 import javax.inject.Inject
-@Deprecated(
-    message = "Use JobbyAuthenticator",
-    replaceWith = ReplaceWith(expression = "JobbyAuthenticator",  "com.bravedroid.jobby.auth"),
-    level = DeprecationLevel.WARNING)
- class RefreshTokenInterceptor @Inject constructor(
-   private val authDataSource: Lazy<AuthDataSource>,
-   private val tokenProvider: TokenProvider,
-   private val logger: Logger,
-) : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
-        var response = chain.proceed(request)
-        if (shouldAuthenticate(request, response)) {
-            updateResponse(response, chain)?.let {
-                response = it
-            }
+
+class JobbyAuthenticator @Inject constructor(
+    private val authDataSource: Lazy<AuthDataSource>,
+    private val tokenProvider: TokenProvider,
+    private val logger: Logger,
+) : Authenticator {
+    override fun authenticate(route: Route?, response: Response): Request? {
+        var newRequest: Request? = null
+        if (InterceptorUtils.isJobbyServerRequest(response.request)) {
+            newRequest = updateAccessToken(response)
         }
-        return response
+        return newRequest
     }
 
     @Synchronized
-    private fun updateResponse(oldResponse: Response, chain: Interceptor.Chain) = runBlocking {
-        oldResponse.close()
-        var newResponse: Response? = null
+    private fun updateAccessToken(response: Response): Request? = runBlocking {
+        var request: Request? = null
         logger.log(
             tag = "OkHttp",
-            msg = "current thread ${Thread.currentThread().name} "
+            msg = "current thread collect ${Thread.currentThread().name}",
         )
         authDataSource.get()
             .refreshToken(RefreshTokenRequestDto(tokenProvider.refreshToken))
@@ -56,13 +48,12 @@ import javax.inject.Inject
                             msg = " Success RefreshTokenResponse "
                         )
                         tokenProvider.accessToken = it.data.accessToken
-                        val newRequest = chain.request().newBuilder()
+                        request = response.request.newBuilder()
                             .updateHeader(
                                 "Authorization",
                                 "Bearer ${tokenProvider.accessToken}"
                             )
                             .build()
-                        newResponse = chain.proceed(newRequest)
                     }
                     is DomainResult.Error -> {
                         logger.log(
@@ -73,11 +64,7 @@ import javax.inject.Inject
                     }
                 }
             }
-        newResponse
+        logger.log(tag = "OkHttp", msg = " End RunBlocking ")
+        request
     }
-
-    private fun shouldAuthenticate(request: Request, response: Response) =
-        isJobbyServerRequest(request) && (response.code == HttpURLConnection.HTTP_UNAUTHORIZED).also {should->
-            if (should) logger.log(tag = "OkHttp", msg = "response.code == 401")
-        }
 }

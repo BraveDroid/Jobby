@@ -1,4 +1,4 @@
-package com.bravedroid.jobby.auth
+package com.bravedroid.jobby.auth.interceptors
 
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.Interceptor
