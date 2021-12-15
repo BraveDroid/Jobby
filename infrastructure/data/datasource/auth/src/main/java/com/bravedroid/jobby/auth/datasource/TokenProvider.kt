@@ -5,7 +5,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TokenProvider @Inject constructor(
-    private val refreshTokenStore: RefreshTokenStoreSecure,
+    private val refreshTokenStore: RefreshTokenStore,
 ) {
     var refreshToken: String
     get()  = refreshTokenStore.get()
