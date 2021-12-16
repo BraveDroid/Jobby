@@ -2,15 +2,13 @@ package com.bravedroid.jobby.companion.vm
 
 import androidx.lifecycle.ViewModel
 import com.bravedroid.jobby.companion.CoroutineProvider
-import com.bravedroid.jobby.companion.vm.FlowExt.combineOn
+import com.bravedroid.jobby.companion.FormValidator
 import com.bravedroid.jobby.domain.log.Logger
-import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.domain.usecases.RegisterUserUseCase
 import com.bravedroid.jobby.domain.usecases.RegisterUserUseCase.RegistrationResponse
 import com.bravedroid.jobby.domain.utils.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +18,7 @@ class RegisterViewModel @Inject constructor(
     private val coroutineProvider: CoroutineProvider,
     private val registerUserUseCase: RegisterUserUseCase,
     private val logger: Logger,
+    private val formValidator: FormValidator,
 ) : ViewModel() {
 
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -59,29 +58,10 @@ class RegisterViewModel @Inject constructor(
     )
 
     fun validateRegisterForm(
-        nameSharedFlow: Flow<String>,
-        emailSharedFlow: Flow<String>,
-        passwordSharedFlow: Flow<String>
-    ): Flow<Boolean> = combineOn(
-        Dispatchers.Default,
-        nameSharedFlow,
-        emailSharedFlow,
-        passwordSharedFlow
-    ) { name, email, password ->
-        logger.log(
-            tag = "RegisterViewModel",
-            msg = "name: $name, email: $email, password: $password",
-            priority = Priority.V
-        )
-        validateForm(name, email, password)
-    }
-
-    private fun validateForm(name: String, email: String, password: String): Boolean {
-        val isValidName = name.isNotBlank()
-        val isValidEmail = email.isNotBlank() && email.contains("@")
-        val isValidPassword = password.isNotBlank() && password.length >= 8
-        return isValidName && isValidEmail && isValidPassword
-    }
+        nameSharedFlow: MutableSharedFlow<String>,
+        emailSharedFlow: MutableSharedFlow<String>,
+        passwordSharedFlow: MutableSharedFlow<String>)=
+        formValidator.validateRegisterForm(nameSharedFlow,emailSharedFlow,passwordSharedFlow)
 
     sealed class UiEvent {
         data class ShowError(val errorMessage: String) : UiEvent()
@@ -90,7 +70,7 @@ class RegisterViewModel @Inject constructor(
 }
 
 object FlowExt {
-    fun <T1, T2, T3, R> combineOn(
+    fun <T1, T2, T3, R> combineOnThreeFlows(
         dispatcher: CoroutineDispatcher,
         flow: Flow<T1>,
         flow2: Flow<T2>,
@@ -100,6 +80,17 @@ object FlowExt {
         flow.flowOn(dispatcher),
         flow2.flowOn(dispatcher),
         flow3.flowOn(dispatcher),
+        transform
+    )
+
+    fun <T1, T2,  R> combineOn(
+        dispatcher: CoroutineDispatcher,
+        flow: Flow<T1>,
+        flow2: Flow<T2>,
+        transform: suspend (T1, T2) -> R,
+    ): Flow<R> = combine(
+        flow.flowOn(dispatcher),
+        flow2.flowOn(dispatcher),
         transform
     )
 }

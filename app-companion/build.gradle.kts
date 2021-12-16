@@ -1,4 +1,3 @@
-
 plugins {
     id("convention-app-build")
     id("dagger.hilt.android.plugin")
@@ -46,4 +45,18 @@ dependencies {
     //compose test
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.compose}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Versions.compose}")
+
+    //test
+    //jvm-testsVersions
+    testImplementation("androidx.arch.core:core-testing:${Versions.core_testing}")
+    testImplementation("androidx.test:core-ktx:${Versions.test_core_ktx}")
+    testImplementation("junit:junit:${Versions.junit}")
+    testImplementation("com.google.truth:truth:${Versions.truth}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlin_coroutines}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:${Versions.mockito_kotlin}")
+    testImplementation("org.mockito:mockito-core:${Versions.mockito_core}")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("org.mockito:mockito-inline:${Versions.mockito_core}")
+    testImplementation("androidx.room:room-testing:${Versions.room}")
 }

@@ -4,19 +4,30 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import com.bravedroid.jobby.companion.databinding.ActivityLoginBinding
 import com.bravedroid.jobby.companion.vm.LoginViewModel
+import com.bravedroid.jobby.domain.log.Logger
+import com.bravedroid.jobby.domain.log.Priority
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var binding: ActivityLoginBinding
+    @Inject
+    internal lateinit var logger: Logger
+
+    private val emailSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
+    private val passwordSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +57,23 @@ class LoginActivity : AppCompatActivity() {
             }
             binding.loginBtn.isEnabled = true
         }.launchIn(lifecycleScope)
+
+        binding.emailEditText.doOnTextChanged { text, _, _, _ ->
+            lifecycleScope.launch {
+                if (text != null) emailSharedFlow.emit(text.toString())
+            }
+        }
+        binding.passwordEditText.doOnTextChanged { text, _, _, _ ->
+            lifecycleScope.launch {
+                if (text != null) passwordSharedFlow.emit(text.toString())
+            }
+        }
+
+        viewModel.validateLoginForm(emailSharedFlow, passwordSharedFlow)
+            .onEach { isValid ->
+                logger.log("LoginActivity", "$isValid", Priority.V)
+                binding.loginBtn.isEnabled = isValid
+            }.launchIn(lifecycleScope)
     }
 
     private fun navigateToUserProfile() {

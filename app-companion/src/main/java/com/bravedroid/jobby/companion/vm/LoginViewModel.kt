@@ -3,6 +3,7 @@ package com.bravedroid.jobby.companion.vm
 import androidx.lifecycle.ViewModel
 import com.bravedroid.jobby.auth.datasource.TokenProvider
 import com.bravedroid.jobby.companion.CoroutineProvider
+import com.bravedroid.jobby.companion.FormValidator
 import com.bravedroid.jobby.companion.vm.LoginViewModel.UiEvent
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.usecases.LoginUserUseCase
@@ -19,6 +20,7 @@ class LoginViewModel @Inject constructor(
     private val coroutineProvider: CoroutineProvider,
     private val loginUserUseCase: LoginUserUseCase,
     private val logger: Logger,
+    private val formValidator: FormValidator,
     ) : ViewModel() {
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
@@ -43,6 +45,11 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    fun validateLoginForm(
+        emailSharedFlow: MutableSharedFlow<String>,
+        passwordSharedFlow: MutableSharedFlow<String>)=
+        formValidator.validateLoginForm(emailSharedFlow,passwordSharedFlow)
 
     data class LoginUiModel(
         val email: String,
