@@ -10,4 +10,5 @@ import kotlinx.coroutines.flow.Flow
 interface Authentication {
     fun register(registrationRequest: RegistrationRequest): Flow<DomainResult<RegistrationResponse>>
     fun login(loginRequest: LoginRequest): Flow<DomainResult<LoginResponse>>
+    fun isUserLoggedIn(): Flow<Boolean>
 }

@@ -3,6 +3,7 @@ package com.bravedroid.jobby.domain.usecases
 import com.bravedroid.jobby.domain.auth.Authentication
 import com.bravedroid.jobby.domain.utils.DomainResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class LoginUserUseCase @Inject constructor(
@@ -10,6 +11,8 @@ class LoginUserUseCase @Inject constructor(
 ) {
     operator fun invoke(loginRequest: LoginRequest): Flow<DomainResult<LoginResponse>> =
         authentication.login(loginRequest)
+
+    fun isUserLoggedIn(): Flow<Boolean> = authentication.isUserLoggedIn()
 
     data class LoginRequest(
         val email: String,

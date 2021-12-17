@@ -14,6 +14,8 @@ import com.bravedroid.jobby.domain.utils.DomainResult
 import com.bravedroid.jobby.domain.utils.DomainResult.Companion.getDataOrNull
 import com.bravedroid.jobby.domain.utils.DomainResult.Companion.mapToResultSuccessOrKeepSameResultError
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -52,4 +54,5 @@ class AuthenticationImpl @Inject constructor(
             }
     }
 
+    override fun isUserLoggedIn(): Flow<Boolean> = flowOf(tokenProvider.refreshToken.isNotEmpty())
 }
