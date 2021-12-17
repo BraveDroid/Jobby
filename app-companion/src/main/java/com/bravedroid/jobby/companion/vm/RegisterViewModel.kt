@@ -58,10 +58,10 @@ class RegisterViewModel @Inject constructor(
     )
 
     fun validateRegisterForm(
-        nameSharedFlow: MutableSharedFlow<String>,
-        emailSharedFlow: MutableSharedFlow<String>,
-        passwordSharedFlow: MutableSharedFlow<String>)=
-        formValidator.validateRegisterForm(nameSharedFlow,emailSharedFlow,passwordSharedFlow)
+        nameStateFlow: MutableStateFlow<String>,
+        emailStateFlow: MutableStateFlow<String>,
+        passwordStateFlow: MutableStateFlow<String>)=
+        formValidator.validateRegisterForm(nameStateFlow,emailStateFlow,passwordStateFlow)
 
     sealed class UiEvent {
         data class ShowError(val errorMessage: String) : UiEvent()

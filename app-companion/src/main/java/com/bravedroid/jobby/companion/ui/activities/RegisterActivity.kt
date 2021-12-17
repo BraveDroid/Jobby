@@ -14,7 +14,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,9 +23,9 @@ class RegisterActivity : AppCompatActivity() {
     private val viewModel: RegisterViewModel by viewModels()
     private lateinit var binding: ActivityRegisterBinding
 
-    private val nameSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
-    private val emailSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
-    private val passwordSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
+    private val nameStateFlow: MutableStateFlow<String> = MutableStateFlow("")
+    private val emailStateFlow: MutableStateFlow<String> = MutableStateFlow("")
+    private val passwordStateFlow: MutableStateFlow<String> = MutableStateFlow("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,22 +62,16 @@ class RegisterActivity : AppCompatActivity() {
 
 
         binding.editTextUserName.doOnTextChanged { text, _, _, _ ->
-            lifecycleScope.launch {
-                if (text != null) nameSharedFlow.emit(text.toString())
-            }
+            if (text != null) nameStateFlow.value = text.toString()
         }
         binding.editTextEmail.doOnTextChanged { text, _, _, _ ->
-            lifecycleScope.launch {
-                if (text != null) emailSharedFlow.emit(text.toString())
-            }
+            if (text != null) emailStateFlow.value = text.toString()
         }
         binding.editTextPassword.doOnTextChanged { text, _, _, _ ->
-            lifecycleScope.launch {
-                if (text != null) passwordSharedFlow.emit(text.toString())
-            }
+            if (text != null) passwordStateFlow.value = text.toString()
         }
 
-        viewModel.validateRegisterForm(nameSharedFlow, emailSharedFlow, passwordSharedFlow)
+        viewModel.validateRegisterForm(nameStateFlow, emailStateFlow, passwordStateFlow)
             .onEach { isValid ->
                 logger.log("RegisterActivity", "$isValid", Priority.V)
                 binding.registerBtn.isEnabled = isValid

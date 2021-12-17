@@ -5,6 +5,7 @@ import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import java.util.regex.Pattern.compile
 import javax.inject.Inject
 
 class FormValidator @Inject constructor(
@@ -48,14 +49,28 @@ class FormValidator @Inject constructor(
 
     private fun validateForm(name: String, email: String, password: String): Boolean {
         val isValidName = name.isNotBlank()
-        val isValidEmail = email.isNotBlank() && email.contains("@")
+        val isValidEmail = email.isNotBlank() && isEmail(email)
         val isValidPassword = password.isNotBlank() && password.length >= 8
         return isValidName && isValidEmail && isValidPassword
     }
 
     private fun validateForm( email: String, password: String): Boolean {
-        val isValidEmail = email.isNotBlank() && email.contains("@")
+        val isValidEmail = email.isNotBlank() && isEmail(email)
         val isValidPassword = password.isNotBlank() && password.length >= 8
         return isValidEmail && isValidPassword
+    }
+
+    private val emailRegex = compile(
+        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                "\\@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                "(" +
+                "\\." +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                ")+"
+    )
+
+    fun isEmail(email: String) : Boolean {
+        return emailRegex.matcher(email).matches()
     }
 }

@@ -10,6 +10,7 @@ import com.bravedroid.jobby.domain.usecases.LoginUserUseCase
 import com.bravedroid.jobby.domain.utils.DomainResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ class LoginViewModel @Inject constructor(
     private val loginUserUseCase: LoginUserUseCase,
     private val logger: Logger,
     private val formValidator: FormValidator,
-    ) : ViewModel() {
+) : ViewModel() {
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
 
@@ -30,7 +31,7 @@ class LoginViewModel @Inject constructor(
             loginUserUseCase(model.toLoginRequest()).collectLatest {
                 when (it) {
                     is DomainResult.Error -> {
-                        logger.log("LoginViewModel","${it.errorEntity}")
+                        logger.log("LoginViewModel", "${it.errorEntity}")
                         _uiEventFlow.emit(
                             UiEvent.ShowError(
                                 "Unknown Error !"
@@ -38,7 +39,7 @@ class LoginViewModel @Inject constructor(
                         )
                     }
                     is DomainResult.Success -> {
-                        if (it.data== LoginUserUseCase.LoginResponse.LoggedIn)
+                        if (it.data == LoginUserUseCase.LoginResponse.LoggedIn)
                             _uiEventFlow.emit(UiEvent.NavigationToUserProfile)
                     }
                 }
@@ -47,9 +48,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun validateLoginForm(
-        emailSharedFlow: MutableSharedFlow<String>,
-        passwordSharedFlow: MutableSharedFlow<String>)=
-        formValidator.validateLoginForm(emailSharedFlow,passwordSharedFlow)
+        emailStateFlow: MutableStateFlow<String>,
+        passwordStateFlow: MutableStateFlow<String>
+    ) = formValidator.validateLoginForm(emailStateFlow, passwordStateFlow)
 
     data class LoginUiModel(
         val email: String,

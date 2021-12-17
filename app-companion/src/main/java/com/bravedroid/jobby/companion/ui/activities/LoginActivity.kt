@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,11 +24,12 @@ import javax.inject.Inject
 class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var binding: ActivityLoginBinding
+
     @Inject
     internal lateinit var logger: Logger
 
-    private val emailSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
-    private val passwordSharedFlow: MutableSharedFlow<String> = MutableSharedFlow()
+    private val emailSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
+    private val passwordSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,14 +61,10 @@ class LoginActivity : AppCompatActivity() {
         }.launchIn(lifecycleScope)
 
         binding.emailEditText.doOnTextChanged { text, _, _, _ ->
-            lifecycleScope.launch {
-                if (text != null) emailSharedFlow.emit(text.toString())
-            }
+            if (text != null) emailSharedFlow.value = text.toString()
         }
         binding.passwordEditText.doOnTextChanged { text, _, _, _ ->
-            lifecycleScope.launch {
-                if (text != null) passwordSharedFlow.emit(text.toString())
-            }
+            if (text != null) passwordSharedFlow.value = text.toString()
         }
 
         viewModel.validateLoginForm(emailSharedFlow, passwordSharedFlow)
