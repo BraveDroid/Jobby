@@ -29,14 +29,17 @@ dependencies {
     implementation(project(":infrastructure:data:datasource:auth"))
     implementation(project(":infrastructure:data:datasource:network:findwork"))
     implementation(project(":infrastructure:data:repository"))
+    implementation(project(":presentation:features:login"))
 
     //compose
     implementation("androidx.compose.ui:ui:${Versions.compose}")
     implementation("androidx.compose.material:material:${Versions.compose}")
     implementation("androidx.compose.ui:ui-tooling-preview:${Versions.compose}")
     implementation("androidx.activity:activity-compose:${Versions.activity_compose}")
+
+    //appcompat
     implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:${Versions.material}")
     implementation("androidx.annotation:annotation:1.2.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")

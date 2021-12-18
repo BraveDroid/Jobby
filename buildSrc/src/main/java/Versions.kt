@@ -20,9 +20,11 @@ object Versions {
     //const val hilt = "2.40.2"
 
     //ui
-    const val android_material = "1.4.0"
     const val constraintlayout = "2.1.1"
     const val recyclerview = "1.2.1"
+
+    //material
+    const val material ="1.6.0-alpha01"
 
     //data
     const val preference = "1.1.1"
@@ -57,5 +59,7 @@ object Versions {
 
     //security-crypto:1.0.0
     const val securityCrypto ="1.0.0"
+
+
 
 }

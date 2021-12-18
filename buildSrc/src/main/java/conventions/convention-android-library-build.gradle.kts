@@ -1,3 +1,5 @@
+import gradle.kotlin.dsl.accessors._0950e70c2749e1ef57eb981e05f5b097.implementation
+
 plugins {
     `android-library`
     kotlin("android")
@@ -37,6 +39,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
 
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")

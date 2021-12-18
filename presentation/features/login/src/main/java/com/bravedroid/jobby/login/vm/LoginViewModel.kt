@@ -1,13 +1,11 @@
-package com.bravedroid.jobby.companion.vm
+package com.bravedroid.jobby.login.vm
 
 import androidx.lifecycle.ViewModel
-import com.bravedroid.jobby.auth.datasource.TokenProvider
-import com.bravedroid.jobby.companion.CoroutineProvider
-import com.bravedroid.jobby.companion.FormValidator
-import com.bravedroid.jobby.companion.vm.LoginViewModel.UiEvent
-import com.bravedroid.jobby.domain.log.Logger
+ import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.usecases.LoginUserUseCase
 import com.bravedroid.jobby.domain.utils.DomainResult
+import com.bravedroid.jobby.login.CoroutineProvider
+import com.bravedroid.jobby.login.FormValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

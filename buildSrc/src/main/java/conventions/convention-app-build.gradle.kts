@@ -60,7 +60,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}")
 
     //ui
-    implementation("com.google.android.material:material:${Versions.android_material}")
+    implementation("com.google.android.material:material:${Versions.material}")
     implementation("androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}")
     implementation("androidx.recyclerview:recyclerview:${Versions.recyclerview}")
 
