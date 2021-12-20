@@ -1,6 +1,7 @@
 
 plugins {
     id("convention-android-library-build")
+    id("dagger.hilt.android.plugin")
     id("kotlin-android")
 }
 
@@ -38,5 +39,7 @@ dependencies{
     implementation("androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}")
     implementation("androidx.recyclerview:recyclerview:${Versions.recyclerview}")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
 }

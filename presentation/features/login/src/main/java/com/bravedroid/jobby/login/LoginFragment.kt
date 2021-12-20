@@ -47,8 +47,8 @@ class LoginFragment : Fragment() {
             it.isEnabled = false
             viewModel.login(
                 LoginViewModel.LoginUiModel(
-                    email = bindingLogin.emailEditText.text.toString(),
-                    password = bindingLogin.passwordEditText.text.toString(),
+                    email = bindingLogin.emailTextInput.editText?.text.toString(),
+                    password = bindingLogin.passwordTextInput.editText?.text.toString(),
                 )
             )
         }
@@ -68,10 +68,10 @@ class LoginFragment : Fragment() {
             bindingLogin.loginBtn.isEnabled = true
         }.launchIn(lifecycleScope)
 
-        bindingLogin.emailEditText.doOnTextChanged { text, _, _, _ ->
+        bindingLogin.emailTextInput.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) emailSharedFlow.value = text.toString()
         }
-        bindingLogin.passwordEditText.doOnTextChanged { text, _, _, _ ->
+        bindingLogin.passwordTextInput.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) passwordSharedFlow.value = text.toString()
         }
 
@@ -80,6 +80,10 @@ class LoginFragment : Fragment() {
                 logger.log("LoginActivity", "$isValid", Priority.V)
                 bindingLogin.loginBtn.isEnabled = isValid
             }.launchIn(lifecycleScope)
+
+        bindingLogin.registerLinkTextView.setOnClickListener {
+
+        }
     }
 
     private fun navigateToUserProfile() {

@@ -30,6 +30,7 @@ dependencies {
     implementation(project(":infrastructure:data:datasource:network:findwork"))
     implementation(project(":infrastructure:data:repository"))
     implementation(project(":presentation:features:login"))
+    implementation(project(":theme"))
 
     //compose
     implementation("androidx.compose.ui:ui:${Versions.compose}")
@@ -44,6 +45,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     //compose test
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${Versions.compose}")
