@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Custom typescale attributes-->
+    <attr name="textAppearanceBodyExtraLarge" format="reference" />
+    <attr name="textAppearanceLogo" format="reference" />
+</resources>

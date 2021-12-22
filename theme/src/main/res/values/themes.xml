@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+    <style name="JobbyAppTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
@@ -24,6 +24,7 @@
 
         <item name="android:colorBackground">@color/md_theme_light_background</item>
         <item name="colorOnBackground">@color/md_theme_light_onBackground</item>
+
         <item name="colorSurface">@color/md_theme_light_surface</item>
         <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
         <item name="colorSurfaceVariant">@color/md_theme_light_surfaceVariant</item>
@@ -34,7 +35,33 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
+        <!--Font-->
         <item name="android:fontFamily">@font/nunito</item>
-
+        <!--Typography-->
+        <item name="textAppearanceLogo">@style/TextAppearance.Jobby.logo</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.Jobby.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Jobby.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Jobby.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Jobby.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Jobby.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Jobby.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.Jobby.TitleSmall</item>
+        <item name="textAppearanceBodyExtraLarge">@style/TextAppearance.Jobby.BodyExtraLarge</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Jobby.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Jobby.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Jobby.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Jobby.LabelLarge</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Jobby.LabelSmall</item>
     </style>
+
+    <!--theme-->
+    <style name="JobbyAppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="JobbyAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="JobbyAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

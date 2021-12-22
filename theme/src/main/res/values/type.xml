@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    typography-->
+    <!--    logo-->
+    <style name="TextAppearance.Jobby.logo" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="fontFamily">@font/bebasneue_regular</item>
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
+        <item name="android:textStyle">bold|italic</item>
+
+    </style>
+    <!--    Display-->
+    <style name="TextAppearance.Jobby.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/nunito_bold</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <!--    Headline-->
+    <style name="TextAppearance.Jobby.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <!--    Title-->
+    <style name="TextAppearance.Jobby.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <!--    Body-->
+    <style name="TextAppearance.Jobby.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="lineHeight">24sp</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.BodyExtraLarge" parent="TextAppearance.Jobby.BodyLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+    <!--    Label-->
+    <style name="TextAppearance.Jobby.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.Jobby.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+    </style>
+
+</resources>

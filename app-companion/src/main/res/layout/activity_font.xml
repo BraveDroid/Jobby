@@ -54,12 +54,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/nunito"
         android:text="bold"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:text="2 hr ago" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
