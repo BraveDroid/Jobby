@@ -16,7 +16,7 @@
         android:layout_marginTop="140dp"
         android:layout_marginBottom="10dp"
         android:text="@string/login"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textAppearance="?attr/textAppearanceHeadlineLarge"
         app:layout_constraintBottom_toTopOf="@+id/emailTextInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -74,7 +74,7 @@
 
     <Button
         android:id="@+id/loginBtn"
-        style="?attr/materialButtonOutlinedStyle"
+        style="@style/Jobby.Login.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -97,6 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:padding="0dp"
         android:text="Register"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

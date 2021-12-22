@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ShapeAppearance.Jobby.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+<!--        <item name="cornerFamily">cut</item>-->
+<!--        <item name="cornerSize">4dp</item>-->
+    </style>
+
+    <style name="ShapeAppearance.Jobby.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSize">@dimen/jobby_medium_component_corner_radius</item>-->
+    </style>
+
+    <style name="ShapeAppearance.Jobby.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+<!--        <item name="cornerFamily">rounded</item>-->
+<!--        <item name="cornerSize">@dimen/jobby_large_component_corner_radius</item>-->
+    </style>
+
+    <dimen name="jobby_small_component_corner_radius">24dp</dimen>
+    <dimen name="jobby_medium_component_corner_radius">0dp</dimen>
+    <dimen name="jobby_large_component_corner_radius">12dp</dimen>
+
+</resources>

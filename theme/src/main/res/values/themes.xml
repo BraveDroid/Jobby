@@ -35,8 +35,14 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_primaryInverse</item>
 
+        <!--shape-->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Jobby.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Jobby.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Jobby.LargeComponent</item>
+
         <!--Font-->
         <item name="android:fontFamily">@font/nunito</item>
+
         <!--Typography-->
         <item name="textAppearanceLogo">@style/TextAppearance.Jobby.logo</item>
         <item name="textAppearanceDisplayMedium">@style/TextAppearance.Jobby.DisplayMedium</item>

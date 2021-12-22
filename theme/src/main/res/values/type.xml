@@ -21,7 +21,7 @@
 
     <!--    Headline-->
     <style name="TextAppearance.Jobby.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
-        <item name="fontFamily">@font/nunito_regular</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorSecondary</item>
     </style>
 
@@ -62,7 +62,7 @@
 
     <style name="TextAppearance.Jobby.BodyExtraLarge" parent="TextAppearance.Jobby.BodyLarge">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
     </style>
 
     <style name="TextAppearance.Jobby.BodySmall" parent="TextAppearance.Material3.BodySmall">
