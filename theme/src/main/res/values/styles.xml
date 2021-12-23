@@ -21,4 +21,11 @@
         <item name="cornerSize">4dp</item>
     </style>
 
+
+    <style name="Jobby.Login.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
+        <item name="android:textColor">@color/white_80</item>
+        <item name="rippleColor">@android:color/transparent</item>
+    </style>
+
 </resources>

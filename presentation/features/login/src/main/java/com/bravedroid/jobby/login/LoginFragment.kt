@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bindingLogin.loginBtn.setOnClickListener {
+        bindingLogin.loginBtn?.setOnClickListener {
             it.isEnabled = false
             viewModel.login(
                 LoginViewModel.LoginUiModel(
@@ -65,7 +65,7 @@ class LoginFragment : Fragment() {
                         .show()
                 }
             }
-            bindingLogin.loginBtn.isEnabled = true
+            bindingLogin.loginBtn?.isEnabled = true
         }.launchIn(lifecycleScope)
 
         bindingLogin.emailTextInput.editText?.doOnTextChanged { text, _, _, _ ->
@@ -78,10 +78,10 @@ class LoginFragment : Fragment() {
         viewModel.validateLoginForm(emailSharedFlow, passwordSharedFlow)
             .onEach { isValid ->
                 logger.log("LoginActivity", "$isValid", Priority.V)
-                bindingLogin.loginBtn.isEnabled = isValid
+                bindingLogin.loginBtn?.isEnabled = isValid
             }.launchIn(lifecycleScope)
 
-        bindingLogin.registerLinkTextView.setOnClickListener {
+        bindingLogin.registerLinkTextView?.setOnClickListener {
 
         }
     }
