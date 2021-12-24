@@ -1,4 +1,3 @@
-import gradle.kotlin.dsl.accessors._0950e70c2749e1ef57eb981e05f5b097.implementation
 
 plugins {
     `android-library`
@@ -8,6 +7,7 @@ plugins {
 
 android {
     compileSdk = Versions.compileSdk
+//    buildToolsVersion = "30.0.3"
 
     defaultConfig {
         minSdk = Versions.minSdk
@@ -33,6 +33,13 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
+
+
+        buildFeatures {
+            dataBinding = true
+            viewBinding = true
+        }
+
 }
 
 dependencies {

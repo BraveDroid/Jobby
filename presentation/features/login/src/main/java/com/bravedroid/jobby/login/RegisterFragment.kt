@@ -44,16 +44,16 @@ class RegisterFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bindingRegister.goToLoginBtn.setOnClickListener {
-            navigateToLogin()
-        }
+//        bindingRegister.goToLoginBtn.setOnClickListener {
+//            navigateToLogin()
+//        }
         bindingRegister.registerBtn.setOnClickListener {
             it.isEnabled = false
             viewModel.register(
                 RegisterViewModel.RegisterUiModel(
-                    email = bindingRegister.editTextEmail.text.toString(),
-                    name = bindingRegister.editTextUserName.text.toString(),
-                    password = bindingRegister.editTextPassword.text.toString(),
+                    email = bindingRegister.editTextEmail.editText?.text.toString(),
+                    name = bindingRegister.editTextUserName.editText?.text.toString(),
+                    password = bindingRegister.editTextPassword.editText?.text.toString(),
                 )
             )
         }
@@ -72,13 +72,13 @@ class RegisterFragment : Fragment() {
         }.launchIn(lifecycleScope)
 
 
-        bindingRegister.editTextUserName.doOnTextChanged { text, _, _, _ ->
+        bindingRegister.editTextUserName.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) nameStateFlow.value = text.toString()
         }
-        bindingRegister.editTextEmail.doOnTextChanged { text, _, _, _ ->
+        bindingRegister.editTextEmail.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) emailStateFlow.value = text.toString()
         }
-        bindingRegister.editTextPassword.doOnTextChanged { text, _, _, _ ->
+        bindingRegister.editTextPassword.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) passwordStateFlow.value = text.toString()
         }
 

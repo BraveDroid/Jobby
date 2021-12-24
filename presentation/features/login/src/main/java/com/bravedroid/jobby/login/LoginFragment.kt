@@ -1,13 +1,16 @@
 package com.bravedroid.jobby.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.login.databinding.FragmentLoginBinding
@@ -21,7 +24,10 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(R.layout.fragment_login) {
+    init {
+        Log.d("LoginFragment","LoginFragment ${hashCode()}")
+    }
 
     @Inject
     lateinit var logger: Logger
@@ -33,17 +39,28 @@ class LoginFragment : Fragment() {
     private val emailSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
     private val passwordSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _bindingLogin = FragmentLoginBinding.inflate(inflater, container, false)
-        return bindingLogin.root
-    }
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?,
+//    ): View {
+////        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(
+////            inflater, R.layout.fragment_login, container, false
+////        )
+//
+////        _bindingLogin = binding
+////        return binding.root
+////        _bindingLogin = FragmentLoginBinding.inflate(inflater, container, false)
+////        return bindingLogin.root
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        bindingLogin.loginBtn?.setOnClickListener {
+        val bindingLogin = DataBindingUtil.bind<FragmentLoginBinding>(requireView())!!
+        bindingLogin.registerLinkTextView.setOnClickListener {
+            Log.d("LoginFragment","registerLinkTextView clicked")
+            it.findNavController().navigate(R.id.registerFragment)
+        }
+        bindingLogin.loginBtn.setOnClickListener {
             it.isEnabled = false
             viewModel.login(
                 LoginViewModel.LoginUiModel(
@@ -65,7 +82,7 @@ class LoginFragment : Fragment() {
                         .show()
                 }
             }
-            bindingLogin.loginBtn?.isEnabled = true
+            bindingLogin.loginBtn.isEnabled = true
         }.launchIn(lifecycleScope)
 
         bindingLogin.emailTextInput.editText?.doOnTextChanged { text, _, _, _ ->
@@ -78,10 +95,10 @@ class LoginFragment : Fragment() {
         viewModel.validateLoginForm(emailSharedFlow, passwordSharedFlow)
             .onEach { isValid ->
                 logger.log("LoginActivity", "$isValid", Priority.V)
-                bindingLogin.loginBtn?.isEnabled = isValid
+                bindingLogin.loginBtn.isEnabled = isValid
             }.launchIn(lifecycleScope)
 
-        bindingLogin.registerLinkTextView?.setOnClickListener {
+        bindingLogin.registerLinkTextView.setOnClickListener {
 
         }
     }
@@ -92,5 +109,10 @@ class LoginFragment : Fragment() {
 //        ) {
 //            startActivity(this)
 //        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _bindingLogin = null
     }
 }

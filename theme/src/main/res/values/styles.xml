@@ -26,6 +26,9 @@
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
         <item name="android:textColor">@color/white_80</item>
         <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+
     </style>
 
 </resources>

@@ -8,8 +8,8 @@ plugins {
 android {
 
     buildFeatures {
-        dataBinding = true
-        viewBinding = true
+      dataBinding = true
+      viewBinding = true
     }
 }
 
