@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Jobby.Login.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">28dp</item>
+        <item name="android:paddingRight">28dp</item>
+
+        <item name="strokeColor">@color/white_80</item>
+        <item name="android:textColor">@color/white_80</item>
+
+        <item name="strokeWidth">@dimen/m3_btn_stroke_size</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyExtraLarge</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Jobby.Login.OutlinedButton</item>
+
+    </style>
+    <style name="ShapeAppearance.Jobby.Login.OutlinedButton" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
+
+</resources>

@@ -98,9 +98,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 bindingLogin.loginBtn.isEnabled = isValid
             }.launchIn(lifecycleScope)
 
-        bindingLogin.registerLinkTextView.setOnClickListener {
-
-        }
     }
 
     private fun navigateToUserProfile() {
