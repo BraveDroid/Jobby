@@ -39,20 +39,19 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private val emailSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
     private val passwordSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?,
-//    ): View {
-////        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(
-////            inflater, R.layout.fragment_login, container, false
-////        )
-//
-////        _bindingLogin = binding
-////        return binding.root
-////        _bindingLogin = FragmentLoginBinding.inflate(inflater, container, false)
-////        return bindingLogin.root
-//    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+//        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(
+//            inflater, R.layout.fragment_login, container, false
+//        )
+//        _bindingLogin = binding
+//        return binding.root
+        _bindingLogin = FragmentLoginBinding.inflate(inflater, container, false)
+        return bindingLogin.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val bindingLogin = DataBindingUtil.bind<FragmentLoginBinding>(requireView())!!

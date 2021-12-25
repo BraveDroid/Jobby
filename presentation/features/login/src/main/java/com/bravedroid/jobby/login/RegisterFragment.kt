@@ -1,6 +1,7 @@
 package com.bravedroid.jobby.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.login.databinding.FragmentRegisterBinding
@@ -44,9 +46,10 @@ class RegisterFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        bindingRegister.goToLoginBtn.setOnClickListener {
-//            navigateToLogin()
-//        }
+        bindingRegister.loginLinkTextView.setOnClickListener {
+            Log.d("RegisterFragment", "loginLinkTextView clicked")
+            it.findNavController().navigate(R.id.loginFragment)
+        }
         bindingRegister.registerBtn.setOnClickListener {
             it.isEnabled = false
             viewModel.register(
@@ -61,11 +64,13 @@ class RegisterFragment : Fragment() {
         viewModel.uiEventFlow.onEach {
             when (it) {
                 RegisterViewModel.UiEvent.NavigationToLoginScreen -> {
-                    Snackbar.make(bindingRegister.root, "$it", BaseTransientBottomBar.LENGTH_SHORT).show()
+                    Snackbar.make(bindingRegister.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
+                        .show()
                     navigateToLogin()
                 }
                 is RegisterViewModel.UiEvent.ShowError -> {
-                    Snackbar.make(bindingRegister.root, "$it", BaseTransientBottomBar.LENGTH_SHORT).show()
+                    Snackbar.make(bindingRegister.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
+                        .show()
                 }
             }
             bindingRegister.registerBtn.isEnabled = true
