@@ -77,7 +77,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     navigateToUserProfile()
                 }
                 is LoginViewModel.UiEvent.ShowError -> {
-                    Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
+                     Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -94,6 +94,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         viewModel.validateLoginForm(emailSharedFlow, passwordSharedFlow)
             .onEach { isValid ->
                 logger.log("LoginActivity", "$isValid", Priority.V)
+                bindingLogin.emailTextInput.error="Incorrect Email"
+                bindingLogin.emailTextInput.setErrorIconDrawable(R.drawable.ic_error_outline)
+                bindingLogin.passwordTextInput.error="Incorrect Password "
+                bindingLogin.passwordTextInput.setErrorIconDrawable(R.drawable.ic_error_outline)
                 bindingLogin.loginBtn.isEnabled = isValid
             }.launchIn(lifecycleScope)
 
