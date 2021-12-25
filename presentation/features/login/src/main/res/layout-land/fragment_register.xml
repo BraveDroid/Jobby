@@ -12,14 +12,13 @@
         android:id="@+id/registerTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="114dp"
         android:text="Register"
         android:textAppearance="?attr/textAppearanceHeadlineLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintVertical_bias="0.3"
         />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -29,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="80dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:hint="Full Name"
         app:counterEnabled="false"
         app:errorEnabled="true"
@@ -78,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="40dp"
-        android:hint="password"
+        android:hint="Password"
         app:endIconMode="password_toggle"
         app:errorEnabled="true"
         app:helperTextEnabled="true"
@@ -101,6 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:text="Register"
+        android:backgroundTint="@color/auth_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
