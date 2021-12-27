@@ -15,6 +15,7 @@ import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.login.databinding.FragmentLoginBinding
 import com.bravedroid.jobby.login.vm.LoginViewModel
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,16 +46,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-//        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(
-//            inflater, R.layout.fragment_login, container, false
-//        )
-//        _bindingLogin = binding
-//        return binding.root
         _bindingLogin = FragmentLoginBinding.inflate(inflater, container, false)
         return bindingLogin.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (bindingLogin.emailTextInput.editText?.text?.isEmpty()!!
+            && bindingLogin.passwordTextInput.editText?.text?.isEmpty()!!
+        ) {
+            bindingLogin.loginBtn.isEnabled = false
+        }
         val bindingLogin = DataBindingUtil.bind<FragmentLoginBinding>(requireView())!!
         bindingLogin.registerLinkTextView.setOnClickListener {
             Log.d("LoginFragment", "registerLinkTextView clicked")
@@ -73,13 +74,17 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         viewModel.uiEventFlow.onEach {
             when (it) {
                 LoginViewModel.UiEvent.NavigationToUserProfile -> {
-                    Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
-                        .show()
+                    val snackbar =
+                        Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
+                            .setBackgroundTint(MaterialColors.getColor(view, R.attr.colorSecondary))
+                    snackbar.show()
                     navigateToUserProfile()
                 }
                 is LoginViewModel.UiEvent.ShowError -> {
-                    Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
-                        .show()
+                    val snackbar =
+                        Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
+                            .setBackgroundTint(MaterialColors.getColor(view, R.attr.colorError))
+                    snackbar.show()
                 }
             }
             bindingLogin.loginBtn.isEnabled = true
@@ -106,6 +111,15 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
                 logger.log("LoginActivity", "$validation", Priority.V)
             }.launchIn(lifecycleScope)
+
+        savedInstanceState?.putCharSequence(
+            "emailTextInput",
+            bindingLogin.emailTextInput.editText?.text?.trim()
+        )
+        savedInstanceState?.putCharSequence(
+            "passwordTextInput",
+            bindingLogin.emailTextInput.editText?.text?.trim()
+        )
     }
 
     private fun getErrorIconRes(msg: String?): Int = if (msg == null)
@@ -125,5 +139,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onDestroyView() {
         super.onDestroyView()
         _bindingLogin = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        bindingLogin.emailTextInput.editText?.setText(outState.get("emailTextInput"))
+//        bindingLogin.passwordTextInput.editText?.setText( outState.get("passwordTextInput"))
     }
 }
