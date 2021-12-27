@@ -18,19 +18,20 @@ import com.bravedroid.jobby.login.vm.LoginViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
     init {
-        Log.d("LoginFragment","LoginFragment ${hashCode()}")
+        Log.d("LoginFragment", "LoginFragment ${hashCode()}")
     }
 
     @Inject
     lateinit var logger: Logger
+
+    @Inject
+    lateinit var formValidator: FormValidator
 
     private var _bindingLogin: FragmentLoginBinding? = null
     private val bindingLogin get() = _bindingLogin!!
@@ -56,7 +57,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val bindingLogin = DataBindingUtil.bind<FragmentLoginBinding>(requireView())!!
         bindingLogin.registerLinkTextView.setOnClickListener {
-            Log.d("LoginFragment","registerLinkTextView clicked")
+            Log.d("LoginFragment", "registerLinkTextView clicked")
             it.findNavController().navigate(R.id.registerFragment)
         }
         bindingLogin.loginBtn.setOnClickListener {
@@ -77,7 +78,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     navigateToUserProfile()
                 }
                 is LoginViewModel.UiEvent.ShowError -> {
-                     Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
+                    Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -91,16 +92,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             if (text != null) passwordSharedFlow.value = text.toString()
         }
 
-        viewModel.validateLoginForm(emailSharedFlow, passwordSharedFlow)
-            .onEach { isValid ->
-                logger.log("LoginActivity", "$isValid", Priority.V)
-                bindingLogin.emailTextInput.error="Incorrect Email"
-                bindingLogin.emailTextInput.setErrorIconDrawable(R.drawable.ic_error_outline)
-                bindingLogin.passwordTextInput.error="Incorrect Password "
-                bindingLogin.passwordTextInput.setErrorIconDrawable(R.drawable.ic_error_outline)
-                bindingLogin.loginBtn.isEnabled = isValid
-            }.launchIn(lifecycleScope)
+        formValidator.validateLoginForm(emailSharedFlow, passwordSharedFlow)
+            .debounce(500)
+            .drop(1)
+            .onEach { validation ->
+                bindingLogin.loginBtn.isEnabled = validation.isValid
 
+                bindingLogin.emailTextInput.error = validation.emailErrorMessage
+                bindingLogin.emailTextInput.setErrorIconDrawable(getErrorIconRes(validation.emailErrorMessage))
+
+                bindingLogin.passwordTextInput.error = validation.passwordErrorMessage
+                bindingLogin.passwordTextInput.setErrorIconDrawable(getErrorIconRes(validation.passwordErrorMessage))
+
+                logger.log("LoginActivity", "$validation", Priority.V)
+            }.launchIn(lifecycleScope)
+    }
+
+    private fun getErrorIconRes(msg: String?): Int = if (msg == null)
+        0
+    else {
+        R.drawable.ic_error_outline
     }
 
     private fun navigateToUserProfile() {

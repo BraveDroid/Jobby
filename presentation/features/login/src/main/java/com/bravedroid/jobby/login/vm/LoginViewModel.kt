@@ -19,7 +19,6 @@ class LoginViewModel @Inject constructor(
     private val coroutineProvider: CoroutineProvider,
     private val loginUserUseCase: LoginUserUseCase,
     private val logger: Logger,
-    private val formValidator: FormValidator,
 ) : ViewModel() {
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
@@ -44,11 +43,6 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-    fun validateLoginForm(
-        emailStateFlow: MutableStateFlow<String>,
-        passwordStateFlow: MutableStateFlow<String>
-    ) = formValidator.validateLoginForm(emailStateFlow, passwordStateFlow)
 
     data class LoginUiModel(
         val email: String,
