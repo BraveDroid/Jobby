@@ -1,7 +1,7 @@
 package com.bravedroid.jobby.login.vm
 
 import androidx.lifecycle.ViewModel
- import com.bravedroid.jobby.domain.log.Logger
+import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.usecases.LoginUserUseCase
 import com.bravedroid.jobby.domain.utils.DomainResult
 import com.bravedroid.jobby.login.CoroutineProvider
@@ -22,6 +22,17 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
+
+    private val _loginUiModelStateFlow: MutableStateFlow<LoginUiModel> =
+        MutableStateFlow(LoginUiModel("", ""))
+    val loginUiModelStateFlow: MutableStateFlow<LoginUiModel> = _loginUiModelStateFlow
+
+//    private val _passwordEventFlow: MutableStateFlow<String> = MutableStateFlow("")
+//    val passwordEventFlow: MutableStateFlow<String> = _passwordEventFlow
+
+    fun saveLoginState(loginUiModel: LoginUiModel) {
+        _loginUiModelStateFlow.value = loginUiModel
+    }
 
     fun login(model: LoginUiModel) {
         coroutineProvider.provideViewModelScope(this).launch {
@@ -58,4 +69,5 @@ class LoginViewModel @Inject constructor(
         data class ShowError(val errorMessage: String) : UiEvent()
         object NavigationToUserProfile : UiEvent()
     }
+
 }

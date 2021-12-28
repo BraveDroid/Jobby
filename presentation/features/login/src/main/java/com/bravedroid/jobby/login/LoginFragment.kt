@@ -24,9 +24,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
-    init {
-        Log.d("LoginFragment", "LoginFragment ${hashCode()}")
-    }
 
     @Inject
     lateinit var logger: Logger
@@ -38,6 +35,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private val bindingLogin get() = _bindingLogin!!
 
     private val viewModel: LoginViewModel by viewModels()
+
     private val emailSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
     private val passwordSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
 
@@ -51,6 +49,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel.loginUiModelStateFlow.onEach {
+            bindingLogin.emailTextInput.editText?.setText(it.email)
+            bindingLogin.passwordTextInput.editText?.setText(it.password)
+        }.launchIn(lifecycleScope)
+
         if (bindingLogin.emailTextInput.editText?.text?.isEmpty()!!
             && bindingLogin.passwordTextInput.editText?.text?.isEmpty()!!
         ) {
@@ -111,19 +114,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
                 logger.log("LoginActivity", "$validation", Priority.V)
             }.launchIn(lifecycleScope)
-
-        savedInstanceState?.putCharSequence(
-            "emailTextInput",
-            bindingLogin.emailTextInput.editText?.text?.trim()
-        )
-        savedInstanceState?.putCharSequence(
-            "passwordTextInput",
-            bindingLogin.emailTextInput.editText?.text?.trim()
-        )
     }
 
-    private fun getErrorIconRes(msg: String?): Int = if (msg == null)
-        0
+    private fun getErrorIconRes(msg: String?): Int = if (msg == null) 0
     else {
         R.drawable.ic_error_outline
     }
@@ -136,14 +129,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 //        }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.saveLoginState(
+            LoginViewModel.LoginUiModel(
+                bindingLogin.emailTextInput.editText?.text?.toString() ?: "",
+                bindingLogin.passwordTextInput.editText?.text?.toString() ?: "",
+            )
+        )
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _bindingLogin = null
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        bindingLogin.emailTextInput.editText?.setText(outState.get("emailTextInput"))
-//        bindingLogin.passwordTextInput.editText?.setText( outState.get("passwordTextInput"))
     }
 }
