@@ -17,7 +17,7 @@ class FormValidator @Inject constructor(
         nameSharedFlow: Flow<String>,
         emailSharedFlow: Flow<String>,
         passwordSharedFlow: Flow<String>
-    ): Flow<Boolean> = FlowExt.combineOnThreeFlows(
+    ): Flow<RegisterValidation> = FlowExt.combineOnThreeFlows(
         coroutineProvider.provideDispatcherCpu(),
         nameSharedFlow,
         emailSharedFlow,
@@ -47,11 +47,37 @@ class FormValidator @Inject constructor(
         validateForm(email, password)
     }
 
-    private fun validateForm(name: String, email: String, password: String): Boolean {
+    private fun validateForm(name: String, email: String, password: String): RegisterValidation {
         val isValidName = name.isNotBlank()
         val isValidEmail = email.isNotBlank() && isEmail(email)
         val isValidPassword = password.isNotBlank() && password.length >= 8
-        return isValidName && isValidEmail && isValidPassword
+
+        val validation: RegisterValidation = when {
+            isValidName && isValidEmail && isValidPassword -> {
+                RegisterValidation(true, null, null,null)
+            }
+            !isValidName && isValidEmail && isValidPassword -> {
+                RegisterValidation(false, "Invalid Name", null,null)
+            }
+            !isValidName && !isValidEmail && isValidPassword -> {
+                RegisterValidation(false, "Invalid Name", "Invalid Email",null)
+            }
+            !isValidName && isValidEmail && !isValidPassword -> {
+                RegisterValidation(false, "Invalid Name", null,"Invalid Password")
+            }
+            isValidName && !isValidEmail && isValidPassword -> {
+                RegisterValidation(false, null, "Invalid Email",null)
+            }
+            isValidName && !isValidEmail && !isValidPassword -> {
+                RegisterValidation(false, null, "Invalid Email","Invalid Password")
+            }
+            isValidName && isValidEmail && !isValidPassword -> {
+                RegisterValidation(false, null, null,"Invalid Password")
+            }else -> {
+                RegisterValidation(false, "Invalid Name", "Invalid Email","Invalid Password")
+            }
+        }
+        return validation
     }
 
     private fun validateForm(email: String, password: String): Validation {
@@ -63,13 +89,13 @@ class FormValidator @Inject constructor(
                 Validation(true, null, null)
             }
             isValidEmail && !isValidPassword -> {
-                Validation(false, null, "Unvalid Password")
+                Validation(false, null, "Invalid Password")
             }
             !isValidEmail && isValidPassword -> {
-                Validation(false, "Unvalid Email", null)
+                Validation(false, "Invalid Email", null)
             }
             else -> {
-                Validation(false, "Unvalid Email", "Unvalid Password")
+                Validation(false, "Invalid Email", "Invalid Password")
             }
         }
 
@@ -94,6 +120,13 @@ class FormValidator @Inject constructor(
 
 data class Validation(
     val isValid: Boolean,
+    val emailErrorMessage: String?,
+    val passwordErrorMessage: String?,
+)
+
+data class RegisterValidation(
+    val isValid: Boolean,
+    val nameErrorMessage: String?,
     val emailErrorMessage: String?,
     val passwordErrorMessage: String?,
 )

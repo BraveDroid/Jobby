@@ -27,9 +27,6 @@ class LoginViewModel @Inject constructor(
         MutableStateFlow(LoginUiModel("", ""))
     val loginUiModelStateFlow: MutableStateFlow<LoginUiModel> = _loginUiModelStateFlow
 
-//    private val _passwordEventFlow: MutableStateFlow<String> = MutableStateFlow("")
-//    val passwordEventFlow: MutableStateFlow<String> = _passwordEventFlow
-
     fun saveLoginState(loginUiModel: LoginUiModel) {
         _loginUiModelStateFlow.value = loginUiModel
     }

@@ -13,13 +13,13 @@ import androidx.navigation.findNavController
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.login.databinding.FragmentRegisterBinding
+import com.bravedroid.jobby.login.vm.LoginViewModel
 import com.bravedroid.jobby.login.vm.RegisterViewModel
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,6 +46,20 @@ class RegisterFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        viewModel.registerUiModelStateFlow.onEach {
+
+            bindingRegister.editTextUserName.editText?.setText(it.name)
+            bindingRegister.editTextEmail.editText?.setText(it.email)
+            bindingRegister.editTextPassword.editText?.setText(it.password)
+        }.launchIn(lifecycleScope)
+
+        if (bindingRegister.editTextUserName.editText?.text?.isEmpty()!!
+            && bindingRegister.editTextEmail.editText?.text?.isEmpty()!!
+            && bindingRegister.editTextPassword.editText?.text?.isEmpty()!!
+        ) {
+            bindingRegister.registerBtn.isEnabled = false
+        }
         bindingRegister.loginLinkTextView.setOnClickListener {
             Log.d("RegisterFragment", "loginLinkTextView clicked")
             it.findNavController().navigate(R.id.loginFragment)
@@ -64,13 +78,23 @@ class RegisterFragment : Fragment() {
         viewModel.uiEventFlow.onEach {
             when (it) {
                 RegisterViewModel.UiEvent.NavigationToLoginScreen -> {
-                    Snackbar.make(bindingRegister.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
-                        .show()
+                    val snackbar = Snackbar.make(
+                        bindingRegister.root,
+                        "$it",
+                        BaseTransientBottomBar.LENGTH_SHORT
+                    )
+                        .setBackgroundTint(MaterialColors.getColor(view, R.attr.colorSecondary))
+                    snackbar.show()
                     navigateToLogin()
                 }
                 is RegisterViewModel.UiEvent.ShowError -> {
-                    Snackbar.make(bindingRegister.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
-                        .show()
+                    val snackbar = Snackbar.make(
+                        bindingRegister.root,
+                        "$it",
+                        BaseTransientBottomBar.LENGTH_SHORT
+                    )
+                        .setBackgroundTint(MaterialColors.getColor(view, R.attr.colorError))
+                    snackbar.show()
                 }
             }
             bindingRegister.registerBtn.isEnabled = true
@@ -88,10 +112,49 @@ class RegisterFragment : Fragment() {
         }
 
         viewModel.validateRegisterForm(nameStateFlow, emailStateFlow, passwordStateFlow)
-            .onEach { isValid ->
-                logger.log("RegisterActivity", "$isValid", Priority.V)
-                bindingRegister.registerBtn.isEnabled = isValid
+            .debounce(500)
+            .drop(1)
+            .onEach { registerValidation ->
+                logger.log("RegisterActivity", "${registerValidation.isValid}", Priority.V)
+                bindingRegister.registerBtn.isEnabled = registerValidation.isValid
+
+                bindingRegister.editTextUserName.error = registerValidation.nameErrorMessage
+                bindingRegister.editTextUserName.setErrorIconDrawable(
+                    getErrorIconRes(
+                        registerValidation.emailErrorMessage
+                    )
+                )
+
+                bindingRegister.editTextEmail.error = registerValidation.emailErrorMessage
+                bindingRegister.editTextEmail.setErrorIconDrawable(
+                    getErrorIconRes(
+                        registerValidation.emailErrorMessage
+                    )
+                )
+
+                bindingRegister.editTextPassword.error = registerValidation.passwordErrorMessage
+                bindingRegister.editTextPassword.setErrorIconDrawable(
+                    getErrorIconRes(
+                        registerValidation.passwordErrorMessage
+                    )
+                )
             }.launchIn(lifecycleScope)
+    }
+
+    private fun getErrorIconRes(msg: String?): Int = if (msg == null) 0
+    else {
+        R.drawable.ic_error_outline
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.saveRegisterState(
+            RegisterViewModel.RegisterUiModel(
+                email = bindingRegister.editTextEmail.editText?.text?.toString() ?: "",
+                name = bindingRegister.editTextUserName.editText?.text?.toString() ?: "",
+                password = bindingRegister.editTextPassword.editText?.text?.toString() ?: "",
+            )
+        )
     }
 
     private fun navigateToLogin() {

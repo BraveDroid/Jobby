@@ -24,6 +24,13 @@ class RegisterViewModel @Inject constructor(
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
 
+    private val _registerUiModelStateFlow: MutableStateFlow<RegisterUiModel> =
+        MutableStateFlow(RegisterUiModel("", "",""))
+    val registerUiModelStateFlow: MutableStateFlow<RegisterUiModel> = _registerUiModelStateFlow
+
+    fun saveRegisterState(registerUiModel: RegisterUiModel) {
+        _registerUiModelStateFlow.value = registerUiModel
+    }
     fun register(model: RegisterUiModel) {
         coroutineProvider.provideViewModelScope(this).launch {
             registerUserUseCase(model.toRegistrationRequest()).collectLatest {
