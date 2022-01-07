@@ -23,12 +23,12 @@ class LoginViewModel @Inject constructor(
     private val _uiEventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
 
-    private val _loginUiModelStateFlow: MutableStateFlow<LoginUiModel> =
-        MutableStateFlow(LoginUiModel("", ""))
-    val loginUiModelStateFlow: MutableStateFlow<LoginUiModel> = _loginUiModelStateFlow
+    private val _loginUiModelStateFlow: MutableStateFlow<LoginUiState> =
+        MutableStateFlow(LoginUiState("", "", false))
+    val loginUiModelStateFlow: MutableStateFlow<LoginUiState> = _loginUiModelStateFlow
 
-    fun saveLoginState(loginUiModel: LoginUiModel) {
-        _loginUiModelStateFlow.value = loginUiModel
+    fun saveLoginState(loginUiState: LoginUiState) {
+        _loginUiModelStateFlow.value = loginUiState
     }
 
     fun login(model: LoginUiModel) {
@@ -55,6 +55,12 @@ class LoginViewModel @Inject constructor(
     data class LoginUiModel(
         val email: String,
         val password: String,
+    )
+
+    data class LoginUiState(
+        val email: String,
+        val password: String,
+        val isValid: Boolean,
     )
 
     private fun LoginUiModel.toLoginRequest() = LoginUserUseCase.LoginRequest(
