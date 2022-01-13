@@ -5,9 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -35,12 +33,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private var _bindingLogin: FragmentLoginBinding? = null
     private val bindingLogin get() = _bindingLogin!!
 
-    private val viewModel: LoginViewModel by viewModels()
-
     private val emailSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
     private val passwordSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
 
-    private var shouldEnableLoginBtn: Boolean = false
+    private val viewModel: LoginViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,9 +58,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             && bindingLogin.passwordTextInput.editText?.text?.isEmpty()!!
         ) {
             bindingLogin.loginBtn.isEnabled = false
-            shouldEnableLoginBtn= false
         }
-        val bindingLogin = DataBindingUtil.bind<FragmentLoginBinding>(requireView())!!
         bindingLogin.registerLinkTextView.setOnClickListener {
             Log.d("LoginFragment", "registerLinkTextView clicked")
             it.findNavController().navigate(R.id.registerFragment)
@@ -95,12 +90,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 }
             }
             bindingLogin.loginBtn.isEnabled = true
-            shouldEnableLoginBtn = true
         }.launchIn(lifecycleScope)
 
         emailSharedFlow.value = bindingLogin.emailTextInput.editText?.text.toString()
         passwordSharedFlow.value = bindingLogin.passwordTextInput.editText?.text.toString()
-//        bindingLogin.loginBtn.isEnabled = shouldEnableLoginBtn
 
         bindingLogin.emailTextInput.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) emailSharedFlow.value = text.toString()
@@ -115,13 +108,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             .drop(1)
             .onEach { validation ->
                 bindingLogin.loginBtn.isEnabled = validation.isValid
-                shouldEnableLoginBtn=validation.isValid
 
                 if (validation.emailErrorMessage != null) {
                     bindingLogin.emailTextInput.error = validation.emailErrorMessage
                     bindingLogin.emailTextInput.setErrorIconDrawable(getErrorIconRes(validation.emailErrorMessage))
                     bindingLogin.loginBtn.isEnabled = false
-                    shouldEnableLoginBtn= false
                 } else {
                     bindingLogin.emailTextInput.error = null
                     bindingLogin.emailTextInput.errorIconDrawable = null
@@ -131,7 +122,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     bindingLogin.passwordTextInput.error = validation.passwordErrorMessage
                     bindingLogin.passwordTextInput.setErrorIconDrawable(getErrorIconRes(validation.passwordErrorMessage))
                     bindingLogin.loginBtn.isEnabled = false
-                    shouldEnableLoginBtn=false
                 } else {
                     bindingLogin.passwordTextInput.error = null
                     bindingLogin.passwordTextInput.errorIconDrawable = null
@@ -147,26 +137,17 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun navigateToUserProfile() {
-//        with(
-//            Intent(this@LoginActivity, UserProfileActivity::class.java)
-//        ) {
-//            startActivity(this)
-//        }
     }
 
     override fun onStop() {
         super.onStop()
-//        emailSharedFlow.value = bindingLogin.emailTextInput.editText?.text.toString()
-//        passwordSharedFlow.value = bindingLogin.passwordTextInput.editText?.text.toString()
-//        bindingLogin.loginBtn.isEnabled = shouldEnableLoginBtn
-
         viewModel.saveLoginState(
             LoginViewModel.LoginUiState(
-                bindingLogin.emailTextInput.editText?.text?.toString() ?: emailSharedFlow.value,
-                bindingLogin.passwordTextInput.editText?.text?.toString()
+                email = bindingLogin.emailTextInput.editText?.text?.toString()
+                    ?: emailSharedFlow.value,
+                password = bindingLogin.passwordTextInput.editText?.text?.toString()
                     ?: passwordSharedFlow.value,
-//                shouldEnableLoginBtn,
-            bindingLogin.loginBtn.isEnabled
+                isValid = bindingLogin.loginBtn.isEnabled
             )
         )
     }

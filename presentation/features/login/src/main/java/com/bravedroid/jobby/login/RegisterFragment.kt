@@ -46,12 +46,11 @@ class RegisterFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         viewModel.registerUiModelStateFlow.onEach {
-
             bindingRegister.editTextUserName.editText?.setText(it.name)
             bindingRegister.editTextEmail.editText?.setText(it.email)
             bindingRegister.editTextPassword.editText?.setText(it.password)
+            bindingRegister.registerBtn.isEnabled = it.isValid
         }.launchIn(lifecycleScope)
 
         if (bindingRegister.editTextUserName.editText?.text?.isEmpty()!!
@@ -100,6 +99,9 @@ class RegisterFragment : Fragment() {
             bindingRegister.registerBtn.isEnabled = true
         }.launchIn(lifecycleScope)
 
+        nameStateFlow.value = bindingRegister.editTextUserName.editText?.text.toString()
+        emailStateFlow.value = bindingRegister.editTextEmail.editText?.text.toString()
+        passwordStateFlow.value = bindingRegister.editTextPassword.editText?.text.toString()
 
         bindingRegister.editTextUserName.editText?.doOnTextChanged { text, _, _, _ ->
             if (text != null) nameStateFlow.value = text.toString()
@@ -118,26 +120,45 @@ class RegisterFragment : Fragment() {
                 logger.log("RegisterActivity", "${registerValidation.isValid}", Priority.V)
                 bindingRegister.registerBtn.isEnabled = registerValidation.isValid
 
-                bindingRegister.editTextUserName.error = registerValidation.nameErrorMessage
-                bindingRegister.editTextUserName.setErrorIconDrawable(
-                    getErrorIconRes(
-                        registerValidation.emailErrorMessage
+                if (registerValidation.nameErrorMessage != null) {
+                    bindingRegister.editTextUserName.error = registerValidation.nameErrorMessage
+                    bindingRegister.editTextUserName.setErrorIconDrawable(
+                        getErrorIconRes(
+                            registerValidation.nameErrorMessage
+                        )
                     )
-                )
+                    bindingRegister.registerBtn.isEnabled = false
+                } else {
+                    bindingRegister.editTextUserName.error = null
+                    bindingRegister.editTextUserName.errorIconDrawable = null
+                }
 
-                bindingRegister.editTextEmail.error = registerValidation.emailErrorMessage
-                bindingRegister.editTextEmail.setErrorIconDrawable(
-                    getErrorIconRes(
-                        registerValidation.emailErrorMessage
-                    )
-                )
 
-                bindingRegister.editTextPassword.error = registerValidation.passwordErrorMessage
-                bindingRegister.editTextPassword.setErrorIconDrawable(
-                    getErrorIconRes(
-                        registerValidation.passwordErrorMessage
+                if (registerValidation.emailErrorMessage != null) {
+                    bindingRegister.editTextEmail.error = registerValidation.emailErrorMessage
+                    bindingRegister.editTextEmail.setErrorIconDrawable(
+                        getErrorIconRes(
+                            registerValidation.emailErrorMessage
+                        )
                     )
-                )
+                    bindingRegister.registerBtn.isEnabled = false
+                } else {
+                    bindingRegister.editTextEmail.error = null
+                    bindingRegister.editTextEmail.errorIconDrawable = null
+                }
+
+
+                if (registerValidation.passwordErrorMessage != null) {
+                    bindingRegister.editTextPassword.error = registerValidation.passwordErrorMessage
+                    bindingRegister.editTextPassword.setErrorIconDrawable(
+                        getErrorIconRes(
+                            registerValidation.passwordErrorMessage
+                        )
+                    )
+                } else {
+                    bindingRegister.editTextPassword.error = null
+                    bindingRegister.editTextPassword.errorIconDrawable = null
+                }
             }.launchIn(lifecycleScope)
     }
 
@@ -149,19 +170,18 @@ class RegisterFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.saveRegisterState(
-            RegisterViewModel.RegisterUiModel(
-                email = bindingRegister.editTextEmail.editText?.text?.toString() ?: "",
-                name = bindingRegister.editTextUserName.editText?.text?.toString() ?: "",
-                password = bindingRegister.editTextPassword.editText?.text?.toString() ?: "",
+            RegisterViewModel.RegisterUiState(
+                email = bindingRegister.editTextEmail.editText?.text?.toString()
+                    ?: emailStateFlow.value,
+                name = bindingRegister.editTextUserName.editText?.text?.toString()
+                    ?: nameStateFlow.value,
+                password = bindingRegister.editTextPassword.editText?.text?.toString()
+                    ?: passwordStateFlow.value,
+                isValid = bindingRegister.registerBtn.isEnabled
             )
         )
     }
 
     private fun navigateToLogin() {
-//        with(
-//            Intent(this@RegisterActivity, LoginActivity::class.java)
-//        ) {
-//            startActivity(this)
-//        }
     }
 }

@@ -48,33 +48,34 @@ class FormValidator @Inject constructor(
     }
 
     private fun validateForm(name: String, email: String, password: String): RegisterValidation {
-        val isValidName = name.isNotBlank()
+        val isValidName = name.isNotBlank() && name.length > 1
         val isValidEmail = email.isNotBlank() && isEmail(email)
         val isValidPassword = password.isNotBlank() && password.length >= 8
 
         val validation: RegisterValidation = when {
             isValidName && isValidEmail && isValidPassword -> {
-                RegisterValidation(true, null, null,null)
+                RegisterValidation(true, null, null, null)
             }
             !isValidName && isValidEmail && isValidPassword -> {
-                RegisterValidation(false, "Invalid Name", null,null)
+                RegisterValidation(false, "Invalid Name", null, null)
             }
             !isValidName && !isValidEmail && isValidPassword -> {
-                RegisterValidation(false, "Invalid Name", "Invalid Email",null)
+                RegisterValidation(false, "Invalid Name", "Invalid Email", null)
             }
             !isValidName && isValidEmail && !isValidPassword -> {
-                RegisterValidation(false, "Invalid Name", null,"Invalid Password")
+                RegisterValidation(false, "Invalid Name", null, "Invalid Password")
             }
             isValidName && !isValidEmail && isValidPassword -> {
-                RegisterValidation(false, null, "Invalid Email",null)
+                RegisterValidation(false, null, "Invalid Email", null)
             }
             isValidName && !isValidEmail && !isValidPassword -> {
-                RegisterValidation(false, null, "Invalid Email","Invalid Password")
+                RegisterValidation(false, null, "Invalid Email", "Invalid Password")
             }
             isValidName && isValidEmail && !isValidPassword -> {
-                RegisterValidation(false, null, null,"Invalid Password")
-            }else -> {
-                RegisterValidation(false, "Invalid Name", "Invalid Email","Invalid Password")
+                RegisterValidation(false, null, null, "Invalid Password")
+            }
+            else -> {
+                RegisterValidation(false, "Invalid Name", "Invalid Email", "Invalid Password")
             }
         }
         return validation
