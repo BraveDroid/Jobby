@@ -7,16 +7,16 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.bravedroid.jobby.login.RegisterFragment"
+        android:name="com.bravedroid.jobby.login.register.RegisterFragment"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
-    <action
-        android:id="@+id/action_registerFragment_to_loginFragment"
-        app:destination="@id/loginFragment" />
-</fragment>
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.bravedroid.jobby.login.LoginFragment"
+        android:name="com.bravedroid.jobby.login.login.LoginFragment"
         android:label="LoginFragment">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"

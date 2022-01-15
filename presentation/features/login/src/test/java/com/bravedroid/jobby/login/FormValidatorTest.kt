@@ -1,4 +1,6 @@
-package com.bravedroid.jobby.companion
+package com.bravedroid.jobby.login
+
+import org.junit.Assert.*
 
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.login.CoroutineProvider

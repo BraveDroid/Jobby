@@ -5,24 +5,18 @@ plugins {
     id("kotlin-android")
 }
 
-android {
-
-    buildFeatures {
-      dataBinding = true
-      viewBinding = true
-    }
-}
-
+// TODO:RF 14/01/2022 remove hard coded versions
 dependencies{
     implementation(project(":theme"))
     implementation(project(":domain"))
+    implementation(project(":core"))
 
     implementation("androidx.annotation:annotation:1.2.0")
 
     //androidx
     implementation("androidx.core:core-ktx:${Versions.core_ktx}")
     implementation("androidx.appcompat:appcompat:${Versions.appcompat}")
-//android core
+    //android core
     implementation ("androidx.fragment:fragment-ktx:1.3.2")
     implementation ("androidx.fragment:fragment:1.3.2")
 

@@ -1,4 +1,5 @@
-package com.bravedroid.jobby.login
+package com.bravedroid.jobby.core
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers

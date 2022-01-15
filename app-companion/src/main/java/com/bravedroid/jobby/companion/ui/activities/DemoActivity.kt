@@ -2,10 +2,7 @@ package com.bravedroid.jobby.companion.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
-import com.bravedroid.jobby.companion.R
 import com.bravedroid.jobby.companion.databinding.ActivityDemoBinding
-import com.bravedroid.jobby.login.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

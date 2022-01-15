@@ -26,6 +26,7 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":core"))
     implementation(project(":logger"))
     implementation(project(":infrastructure:data:datasource:auth"))
     implementation(project(":infrastructure:data:datasource:network:findwork"))

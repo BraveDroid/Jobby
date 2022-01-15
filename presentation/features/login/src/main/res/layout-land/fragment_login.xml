@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_land"
-        tools:context=".LoginFragment">
+        tools:context=".login.LoginFragment">
 
         <TextView
             android:id="@+id/loginTv"

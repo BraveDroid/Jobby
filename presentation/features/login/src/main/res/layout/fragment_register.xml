@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_register"
-    tools:context=".RegisterFragment">
+    tools:context=".register.RegisterFragment">
 
     <TextView
         android:id="@+id/registerTv"
@@ -20,7 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.45" />
-<!--    app:layout_constraintBottom_toTopOf="@+id/editTextUserName"-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextUserName"

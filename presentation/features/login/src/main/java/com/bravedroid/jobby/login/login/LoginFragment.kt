@@ -1,10 +1,12 @@
-package com.bravedroid.jobby.login
+package com.bravedroid.jobby.login.login
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.AttrRes
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,15 +14,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
+import com.bravedroid.jobby.login.R
 import com.bravedroid.jobby.login.databinding.FragmentLoginBinding
-import com.bravedroid.jobby.login.vm.LoginViewModel
+import com.bravedroid.jobby.login.util.FormValidator
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
+@FlowPreview
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -33,8 +39,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private var _bindingLogin: FragmentLoginBinding? = null
     private val bindingLogin get() = _bindingLogin!!
 
-    private val emailSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
-    private val passwordSharedFlow: MutableStateFlow<String> = MutableStateFlow("")
+    private val emailStateFlow: MutableStateFlow<String> = MutableStateFlow("")
+    private val passwordStateFlow: MutableStateFlow<String> = MutableStateFlow("")
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -48,65 +54,40 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setListeners()
+        // TODO:RF 15/01/2022 fix leak launchIn
         viewModel.loginUiModelStateFlow.onEach {
             bindingLogin.emailTextInput.editText?.setText(it.email)
             bindingLogin.passwordTextInput.editText?.setText(it.password)
             bindingLogin.loginBtn.isEnabled = it.isValid
-        }.launchIn(lifecycleScope)
 
-        if (bindingLogin.emailTextInput.editText?.text?.isEmpty()!!
-            && bindingLogin.passwordTextInput.editText?.text?.isEmpty()!!
-        ) {
-            bindingLogin.loginBtn.isEnabled = false
-        }
-        bindingLogin.registerLinkTextView.setOnClickListener {
-            Log.d("LoginFragment", "registerLinkTextView clicked")
-            it.findNavController().navigate(R.id.registerFragment)
-        }
-        bindingLogin.loginBtn.setOnClickListener {
-            it.isEnabled = false
-            viewModel.login(
-                LoginViewModel.LoginUiModel(
-                    email = bindingLogin.emailTextInput.editText?.text.toString(),
-                    password = bindingLogin.passwordTextInput.editText?.text.toString(),
-                )
-            )
-        }
+            emailStateFlow.value = bindingLogin.emailTextInput.editText?.text.toString()
+            passwordStateFlow.value = bindingLogin.passwordTextInput.editText?.text.toString()
 
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        // TODO:RF 15/01/2022 fix leak launchIn
         viewModel.uiEventFlow.onEach {
             when (it) {
                 LoginViewModel.UiEvent.NavigationToUserProfile -> {
-                    val snackbar =
-                        Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
-                            .setBackgroundTint(MaterialColors.getColor(view, R.attr.colorSecondary))
-                    snackbar.show()
-                    navigateToUserProfile()
+                    showSnackbar("$it", R.attr.colorSecondary)
+                    navigateToHomeScreen()
                 }
                 is LoginViewModel.UiEvent.ShowError -> {
-                    val snackbar =
-                        Snackbar.make(bindingLogin.root, "$it", BaseTransientBottomBar.LENGTH_SHORT)
-                            .setBackgroundTint(MaterialColors.getColor(view, R.attr.colorError))
-                    snackbar.show()
+                    showSnackbar(message = it.errorMessage, color = R.attr.colorError)
                 }
             }
             bindingLogin.loginBtn.isEnabled = true
-        }.launchIn(lifecycleScope)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
 
-        emailSharedFlow.value = bindingLogin.emailTextInput.editText?.text.toString()
-        passwordSharedFlow.value = bindingLogin.passwordTextInput.editText?.text.toString()
-
-        bindingLogin.emailTextInput.editText?.doOnTextChanged { text, _, _, _ ->
-            if (text != null) emailSharedFlow.value = text.toString()
-        }
-
-        bindingLogin.passwordTextInput.editText?.doOnTextChanged { text, _, _, _ ->
-            if (text != null) passwordSharedFlow.value = text.toString()
-        }
-
-        formValidator.validateLoginForm(emailSharedFlow, passwordSharedFlow)
+        // TODO:RF 15/01/2022 fix leak launchIn
+        formValidator.validateLoginForm(emailStateFlow, passwordStateFlow)
             .debounce(500)
             .drop(1)
+            .flowOn(Dispatchers.Default)
             .onEach { validation ->
+                logger.log("LoginActivity", "$validation", Priority.V)
+
                 bindingLogin.loginBtn.isEnabled = validation.isValid
 
                 if (validation.emailErrorMessage != null) {
@@ -126,17 +107,45 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     bindingLogin.passwordTextInput.error = null
                     bindingLogin.passwordTextInput.errorIconDrawable = null
                 }
-
-                logger.log("LoginActivity", "$validation", Priority.V)
-            }.launchIn(lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun getErrorIconRes(msg: String?): Int = if (msg == null) 0
-    else {
-        R.drawable.ic_error_outline
+    @SuppressLint("ShowToast")
+    private fun showSnackbar(message: String, @AttrRes color: Int) = with(
+        Snackbar.make(bindingLogin.root, message, BaseTransientBottomBar.LENGTH_SHORT)
+            .setBackgroundTint(MaterialColors.getColor(bindingLogin.root, color))
+    ) {
+        show()
     }
 
-    private fun navigateToUserProfile() {
+    private fun setListeners() {
+        bindingLogin.emailTextInput.editText?.doOnTextChanged { text, _, _, _ ->
+            if (text != null) emailStateFlow.value = text.toString()
+        }
+        bindingLogin.passwordTextInput.editText?.doOnTextChanged { text, _, _, _ ->
+            if (text != null) passwordStateFlow.value = text.toString()
+        }
+        bindingLogin.registerLinkTextView.setOnClickListener {
+            Log.d("LoginFragment", "registerLinkTextView clicked")
+            // TODO: 15/01/2022 navigation with directions
+            it.findNavController().navigate(R.id.registerFragment)
+        }
+        bindingLogin.loginBtn.setOnClickListener {
+            it.isEnabled = false
+            viewModel.login(
+                LoginUiModel(
+                    email = bindingLogin.emailTextInput.editText?.text.toString(),
+                    password = bindingLogin.passwordTextInput.editText?.text.toString(),
+                )
+            )
+        }
+    }
+
+    private fun getErrorIconRes(msg: String?): Int =
+        if (msg == null) 0 else R.drawable.ic_error_outline
+
+    private fun navigateToHomeScreen() {
+        // TODO:RF 15/01/2022 deeplink
     }
 
     override fun onStop() {
@@ -144,10 +153,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         viewModel.saveLoginState(
             LoginViewModel.LoginUiState(
                 email = bindingLogin.emailTextInput.editText?.text?.toString()
-                    ?: emailSharedFlow.value,
+                    ?: emailStateFlow.value,
                 password = bindingLogin.passwordTextInput.editText?.text?.toString()
-                    ?: passwordSharedFlow.value,
-                isValid = bindingLogin.loginBtn.isEnabled
+                    ?: passwordStateFlow.value,
+                isValid = bindingLogin.loginBtn.isEnabled,
             )
         )
     }

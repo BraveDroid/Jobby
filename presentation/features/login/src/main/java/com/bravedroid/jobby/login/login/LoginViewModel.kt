@@ -1,16 +1,13 @@
-package com.bravedroid.jobby.login.vm
+package com.bravedroid.jobby.login.login
 
 import androidx.lifecycle.ViewModel
+import com.bravedroid.jobby.core.CoroutineProvider
 import com.bravedroid.jobby.domain.log.Logger
+import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.domain.usecases.LoginUserUseCase
 import com.bravedroid.jobby.domain.utils.DomainResult
-import com.bravedroid.jobby.login.CoroutineProvider
-import com.bravedroid.jobby.login.FormValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +22,7 @@ class LoginViewModel @Inject constructor(
 
     private val _loginUiModelStateFlow: MutableStateFlow<LoginUiState> =
         MutableStateFlow(LoginUiState("", "", false))
-    val loginUiModelStateFlow: MutableStateFlow<LoginUiState> = _loginUiModelStateFlow
+    val loginUiModelStateFlow: StateFlow<LoginUiState> = _loginUiModelStateFlow
 
     fun saveLoginState(loginUiState: LoginUiState) {
         _loginUiModelStateFlow.value = loginUiState
@@ -36,7 +33,11 @@ class LoginViewModel @Inject constructor(
             loginUserUseCase(model.toLoginRequest()).collectLatest {
                 when (it) {
                     is DomainResult.Error -> {
-                        logger.log("LoginViewModel", "${it.errorEntity}")
+                        logger.log(
+                            tag = "LoginViewModel",
+                            priority = Priority.E,
+                            msg = "${it.errorEntity}"
+                        )
                         _uiEventFlow.emit(
                             UiEvent.ShowError(
                                 "Unknown Error !"
@@ -51,11 +52,6 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
-    data class LoginUiModel(
-        val email: String,
-        val password: String,
-    )
 
     data class LoginUiState(
         val email: String,

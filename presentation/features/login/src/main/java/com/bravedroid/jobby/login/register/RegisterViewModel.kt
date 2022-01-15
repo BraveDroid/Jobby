@@ -1,14 +1,13 @@
-package com.bravedroid.jobby.login.vm
+package com.bravedroid.jobby.login.register
 
 import androidx.lifecycle.ViewModel
+import com.bravedroid.jobby.core.CoroutineProvider
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.usecases.RegisterUserUseCase
 import com.bravedroid.jobby.domain.usecases.RegisterUserUseCase.RegistrationResponse
 import com.bravedroid.jobby.domain.utils.DomainResult
-import com.bravedroid.jobby.login.CoroutineProvider
-import com.bravedroid.jobby.login.FormValidator
+import com.bravedroid.jobby.login.util.FormValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,12 +24,13 @@ class RegisterViewModel @Inject constructor(
     val uiEventFlow: SharedFlow<UiEvent> = _uiEventFlow
 
     private val _registerUiModelStateFlow: MutableStateFlow<RegisterUiState> =
-        MutableStateFlow(RegisterUiState("", "","",false))
-    val registerUiModelStateFlow: MutableStateFlow<RegisterUiState> = _registerUiModelStateFlow
+        MutableStateFlow(RegisterUiState("", "", "", false))
+    val registerUiModelStateFlow: StateFlow<RegisterUiState> = _registerUiModelStateFlow
 
     fun saveRegisterState(registerUiState: RegisterUiState) {
         _registerUiModelStateFlow.value = registerUiState
     }
+
     fun register(model: RegisterUiModel) {
         coroutineProvider.provideViewModelScope(this).launch {
             registerUserUseCase(model.toRegistrationRequest()).collectLatest {
@@ -52,12 +52,6 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    data class RegisterUiModel(
-        val email: String,
-        val name: String,
-        val password: String,
-    )
-
     data class RegisterUiState(
         val email: String,
         val name: String,
@@ -74,8 +68,9 @@ class RegisterViewModel @Inject constructor(
     fun validateRegisterForm(
         nameStateFlow: MutableStateFlow<String>,
         emailStateFlow: MutableStateFlow<String>,
-        passwordStateFlow: MutableStateFlow<String>)=
-        formValidator.validateRegisterForm(nameStateFlow,emailStateFlow,passwordStateFlow)
+        passwordStateFlow: MutableStateFlow<String>
+    ) =
+        formValidator.validateRegisterForm(nameStateFlow, emailStateFlow, passwordStateFlow)
 
     sealed class UiEvent {
         data class ShowError(val errorMessage: String) : UiEvent()
@@ -83,28 +78,3 @@ class RegisterViewModel @Inject constructor(
     }
 }
 
-object FlowExt {
-    fun <T1, T2, T3, R> combineOnThreeFlows(
-        dispatcher: CoroutineDispatcher,
-        flow: Flow<T1>,
-        flow2: Flow<T2>,
-        flow3: Flow<T3>,
-        transform: suspend (T1, T2, T3) -> R,
-    ): Flow<R> = combine(
-        flow.flowOn(dispatcher),
-        flow2.flowOn(dispatcher),
-        flow3.flowOn(dispatcher),
-        transform
-    )
-
-    fun <T1, T2,  R> combineOn(
-        dispatcher: CoroutineDispatcher,
-        flow: Flow<T1>,
-        flow2: Flow<T2>,
-        transform: suspend (T1, T2) -> R,
-    ): Flow<R> = combine(
-        flow.flowOn(dispatcher),
-        flow2.flowOn(dispatcher),
-        transform
-    )
-}

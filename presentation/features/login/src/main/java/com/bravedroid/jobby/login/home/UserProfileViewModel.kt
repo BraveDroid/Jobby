@@ -1,10 +1,10 @@
-package com.bravedroid.jobby.login.vm
+package com.bravedroid.jobby.login.home
 
 import androidx.lifecycle.ViewModel
+import com.bravedroid.jobby.core.CoroutineProvider
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.usecases.GetUserProfileUseCase
 import com.bravedroid.jobby.domain.utils.DomainResult
-import com.bravedroid.jobby.login.CoroutineProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
