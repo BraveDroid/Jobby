@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.bravedroid.jobby.core.tracking.EventsTracker
 import com.bravedroid.jobby.domain.log.Logger
 import com.bravedroid.jobby.domain.log.Priority
 import com.bravedroid.jobby.login.R
@@ -29,6 +30,9 @@ class RegisterFragment : Fragment() {
     @Inject
     lateinit var logger: Logger
 
+    @Inject
+    lateinit var eventsTracker: EventsTracker
+
     private var _bindingRegister: FragmentRegisterBinding? = null
     private val bindingRegister get() = _bindingRegister!!
 
@@ -37,6 +41,13 @@ class RegisterFragment : Fragment() {
     private val passwordStateFlow: MutableStateFlow<String> = MutableStateFlow("")
 
     private val viewModel: RegisterViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            eventsTracker.trackRegisterScreenViewEvent()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -145,6 +156,7 @@ class RegisterFragment : Fragment() {
             it.findNavController().navigate(R.id.loginFragment)
         }
         bindingRegister.registerBtn.setOnClickListener {
+            eventsTracker.trackRegisterClickEvent()
             it.isEnabled = false
             viewModel.register(
                 RegisterUiModel(
@@ -160,6 +172,7 @@ class RegisterFragment : Fragment() {
         if (msg == null) 0 else R.drawable.ic_error_outline
 
     private fun navigateToLogin() {
+        eventsTracker.trackUserSignedUpEvent()
         // TODO:RF 15/01/2022 deeplink
     }
 

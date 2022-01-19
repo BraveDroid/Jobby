@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":infrastructure:data:datasource:auth"))
     implementation(project(":infrastructure:data:datasource:network:findwork"))
     implementation(project(":infrastructure:data:repository"))
+    implementation(project(":infrastructure:tracking"))
     implementation(project(":presentation:features:login"))
     implementation(project(":theme"))
 

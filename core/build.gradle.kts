@@ -4,6 +4,7 @@ plugins {
 dependencies {
 
 //lifecycle
+    implementation(project(":domain"))
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}")
