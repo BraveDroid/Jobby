@@ -11,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import com.bravedroid.jobby.core.tracking.EventsTracker
 import com.bravedroid.jobby.domain.log.Logger
@@ -139,7 +140,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         bindingLogin.registerLinkTextView.setOnClickListener {
             Log.d("LoginFragment", "registerLinkTextView clicked")
             // TODO: 15/01/2022 navigation with directions
-            it.findNavController().navigate(R.id.registerFragment)
+            val action: NavDirections = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+            it.findNavController().navigate(action)
         }
         bindingLogin.loginBtn.setOnClickListener {
             eventsTracker.trackLoginClickEvent()

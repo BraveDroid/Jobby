@@ -1,3 +1,4 @@
+import gradle.kotlin.dsl.accessors._0950e70c2749e1ef57eb981e05f5b097.implementation
 
 plugins {
     `android-library`
@@ -48,6 +49,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_coroutines}")
 
+    //nav
+    implementation("androidx.navigation:navigation-fragment-ktx:${Versions.nav}")
+    implementation("androidx.navigation:navigation-ui-ktx:${Versions.nav}")
+    // Feature module Support
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:${Versions.nav}")
+    
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")
     kapt("com.google.dagger:hilt-compiler:${Versions.hilt}")

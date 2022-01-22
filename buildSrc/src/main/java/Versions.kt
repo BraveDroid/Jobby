@@ -1,6 +1,6 @@
-
 object Versions {
     const val applicationId = "com.bravedroid.jobby"
+
     //apiSDK
     const val compileSdk = 31
     const val targetSdk = 31
@@ -24,7 +24,7 @@ object Versions {
     const val recyclerview = "1.2.1"
 
     //material
-    const val material ="1.6.0-alpha01"
+    const val material = "1.6.0-alpha01"
 
     //data
     const val preference = "1.1.1"
@@ -49,17 +49,17 @@ object Versions {
     const val test_ext_junit = "1.1.3"
 
     //compose
-    const val compose ="1.0.1"
-    const val activity_compose ="1.3.0-alpha06"
+    const val compose = "1.0.1"
+    const val activity_compose = "1.3.0-alpha06"
 
     //log & debug
-    const val timber ="5.0.1"
-    const val stetho ="1.6.0"
-    const val stethoOkhttp3 ="1.6.0"
+    const val timber = "5.0.1"
+    const val stetho = "1.6.0"
+    const val stethoOkhttp3 = "1.6.0"
 
     //security-crypto:1.0.0
-    const val securityCrypto ="1.0.0"
+    const val securityCrypto = "1.0.0"
 
-
-
+    //nav
+    const val nav = "2.3.5"
 }

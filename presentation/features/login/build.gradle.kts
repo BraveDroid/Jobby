@@ -3,6 +3,7 @@ plugins {
     id("convention-android-library-build")
     id("dagger.hilt.android.plugin")
     id("kotlin-android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 // TODO:RF 14/01/2022 remove hard coded versions
