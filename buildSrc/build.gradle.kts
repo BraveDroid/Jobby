@@ -1,4 +1,4 @@
-val androidBuildToolsVersion = "7.0.4"
+val androidBuildToolsVersion = "7.1.1"
 val kotlinVersion = "1.5.21"
 
 plugins {

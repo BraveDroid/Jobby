@@ -1,4 +1,3 @@
-import gradle.kotlin.dsl.accessors._0950e70c2749e1ef57eb981e05f5b097.implementation
 
 plugins {
     `android-library`
