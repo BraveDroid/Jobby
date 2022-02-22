@@ -1,6 +1,7 @@
 package com.bravedroid.jobby.login.login
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import com.bravedroid.jobby.core.tracking.EventsTracker
 import com.bravedroid.jobby.domain.log.Logger
@@ -92,7 +94,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     when (it) {
                         LoginViewModel.UiEvent.NavigationToUserProfile -> {
                             showSnackbar("$it", R.attr.colorSecondary)
-                            navigateToHomeScreen()
+                            navigateToHomeScreen(view)
                         }
                         is LoginViewModel.UiEvent.ShowError -> {
                             showSnackbar(message = it.errorMessage, color = R.attr.colorError)
@@ -181,9 +183,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private fun getErrorIconRes(msg: String?): Int =
         if (msg == null) 0 else R.drawable.ic_error_outline
 
-    private fun navigateToHomeScreen() {
+    private fun navigateToHomeScreen(view: View) {
         eventsTracker.trackUserLoggedInEvent()
         // TODO:RF 15/01/2022 deeplink
+        view.findNavController()
+            .navigate(Uri.parse(resources.getString(R.string.uri_deeplink_home)))
     }
 
     override fun onStop() {

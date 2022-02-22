@@ -3,5 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/login_navigation_graph">
-    <include app:graph="@navigation/login_navigation_graph" />
+    <include app:graph="@navigation/navigation_graph_login" />
+    <include app:graph="@navigation/navigation_graph_home" />
 </navigation>

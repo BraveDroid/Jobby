@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":infrastructure:data:repository"))
     implementation(project(":infrastructure:tracking"))
     implementation(project(":presentation:features:login"))
+    implementation(project(":presentation:features:home"))
     implementation(project(":theme"))
 
     //compose
