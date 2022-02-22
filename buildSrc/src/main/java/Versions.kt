@@ -9,14 +9,14 @@ object Versions {
     //androidx
     const val appcompat = "1.3.1"
     const val core_ktx = "1.6.0"
-    const val lifecycle = "2.3.0-rc01"
+    const val lifecycle = "2.5.0-alpha02"
 
     //kotlin
     const val kotlin = "1.5.21"
     const val kotlin_coroutines = "1.6.0-RC"
 
     //Dagger Hilt
-    const val hilt = "2.38.1"
+    const val hilt = "2.40.5"
     //const val hilt = "2.40.2"
 
     //ui

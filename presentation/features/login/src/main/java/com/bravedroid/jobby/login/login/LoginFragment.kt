@@ -10,6 +10,8 @@ import androidx.annotation.AttrRes
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
@@ -26,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @FlowPreview
@@ -67,59 +70,78 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setListeners()
-        // TODO:RF 15/01/2022 fix leak launchIn
-        viewModel.loginUiModelStateFlow.onEach {
-            bindingLogin.emailTextInput.editText?.setText(it.email)
-            bindingLogin.passwordTextInput.editText?.setText(it.password)
-            bindingLogin.loginBtn.isEnabled = it.isValid
 
-            emailStateFlow.value = bindingLogin.emailTextInput.editText?.text.toString()
-            passwordStateFlow.value = bindingLogin.passwordTextInput.editText?.text.toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.loginUiModelStateFlow.collect {
+                    bindingLogin.emailTextInput.editText?.setText(it.email)
+                    bindingLogin.passwordTextInput.editText?.setText(it.password)
+                    bindingLogin.loginBtn.isEnabled = it.isValid
 
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+                    emailStateFlow.value = bindingLogin.emailTextInput.editText?.text.toString()
+                    passwordStateFlow.value =
+                        bindingLogin.passwordTextInput.editText?.text.toString()
 
-        // TODO:RF 15/01/2022 fix leak launchIn
-        viewModel.uiEventFlow.onEach {
-            when (it) {
-                LoginViewModel.UiEvent.NavigationToUserProfile -> {
-                    showSnackbar("$it", R.attr.colorSecondary)
-                    navigateToHomeScreen()
-                }
-                is LoginViewModel.UiEvent.ShowError -> {
-                    showSnackbar(message = it.errorMessage, color = R.attr.colorError)
                 }
             }
-            bindingLogin.loginBtn.isEnabled = true
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        }
 
-        // TODO:RF 15/01/2022 fix leak launchIn
-        formValidator.validateLoginForm(emailStateFlow, passwordStateFlow)
-            .debounce(500)
-            .drop(1)
-            .flowOn(Dispatchers.Default)
-            .onEach { validation ->
-                logger.log("LoginActivity", "$validation", Priority.V)
-
-                bindingLogin.loginBtn.isEnabled = validation.isValid
-
-                if (validation.emailErrorMessage != null) {
-                    bindingLogin.emailTextInput.error = validation.emailErrorMessage
-                    bindingLogin.emailTextInput.setErrorIconDrawable(getErrorIconRes(validation.emailErrorMessage))
-                    bindingLogin.loginBtn.isEnabled = false
-                } else {
-                    bindingLogin.emailTextInput.error = null
-                    bindingLogin.emailTextInput.errorIconDrawable = null
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiEventFlow.collect {
+                    when (it) {
+                        LoginViewModel.UiEvent.NavigationToUserProfile -> {
+                            showSnackbar("$it", R.attr.colorSecondary)
+                            navigateToHomeScreen()
+                        }
+                        is LoginViewModel.UiEvent.ShowError -> {
+                            showSnackbar(message = it.errorMessage, color = R.attr.colorError)
+                        }
+                    }
+                    bindingLogin.loginBtn.isEnabled = true
                 }
+            }
+        }
 
-                if (validation.passwordErrorMessage != null) {
-                    bindingLogin.passwordTextInput.error = validation.passwordErrorMessage
-                    bindingLogin.passwordTextInput.setErrorIconDrawable(getErrorIconRes(validation.passwordErrorMessage))
-                    bindingLogin.loginBtn.isEnabled = false
-                } else {
-                    bindingLogin.passwordTextInput.error = null
-                    bindingLogin.passwordTextInput.errorIconDrawable = null
-                }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                formValidator.validateLoginForm(emailStateFlow, passwordStateFlow)
+                    .debounce(500)
+                    .drop(1)
+                    .flowOn(Dispatchers.Default)
+                    .collect { validation ->
+                        logger.log("LoginActivity", "$validation", Priority.V)
+
+                        bindingLogin.loginBtn.isEnabled = validation.isValid
+
+                        if (validation.emailErrorMessage != null) {
+                            bindingLogin.emailTextInput.error = validation.emailErrorMessage
+                            bindingLogin.emailTextInput.setErrorIconDrawable(
+                                getErrorIconRes(
+                                    validation.emailErrorMessage
+                                )
+                            )
+                            bindingLogin.loginBtn.isEnabled = false
+                        } else {
+                            bindingLogin.emailTextInput.error = null
+                            bindingLogin.emailTextInput.errorIconDrawable = null
+                        }
+
+                        if (validation.passwordErrorMessage != null) {
+                            bindingLogin.passwordTextInput.error = validation.passwordErrorMessage
+                            bindingLogin.passwordTextInput.setErrorIconDrawable(
+                                getErrorIconRes(
+                                    validation.passwordErrorMessage
+                                )
+                            )
+                            bindingLogin.loginBtn.isEnabled = false
+                        } else {
+                            bindingLogin.passwordTextInput.error = null
+                            bindingLogin.passwordTextInput.errorIconDrawable = null
+                        }
+                    }
+            }
+        }
     }
 
     @SuppressLint("ShowToast")
@@ -140,7 +162,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         bindingLogin.registerLinkTextView.setOnClickListener {
             Log.d("LoginFragment", "registerLinkTextView clicked")
             // TODO: 15/01/2022 navigation with directions
-            val action: NavDirections = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+            val action: NavDirections =
+                LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             it.findNavController().navigate(action)
         }
         bindingLogin.loginBtn.setOnClickListener {

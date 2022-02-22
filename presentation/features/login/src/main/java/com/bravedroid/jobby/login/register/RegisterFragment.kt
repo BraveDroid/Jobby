@@ -10,7 +10,9 @@ import androidx.annotation.AttrRes
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import com.bravedroid.jobby.core.tracking.EventsTracker
@@ -24,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,77 +64,87 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setListeners()
-        viewModel.registerUiModelStateFlow.onEach {
-            bindingRegister.editTextUserName.editText?.setText(it.name)
-            bindingRegister.editTextEmail.editText?.setText(it.email)
-            bindingRegister.editTextPassword.editText?.setText(it.password)
-            bindingRegister.registerBtn.isEnabled = it.isValid
 
-            nameStateFlow.value = bindingRegister.editTextUserName.editText?.text.toString()
-            emailStateFlow.value = bindingRegister.editTextEmail.editText?.text.toString()
-            passwordStateFlow.value = bindingRegister.editTextPassword.editText?.text.toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.registerUiModelStateFlow.collect {
+                    bindingRegister.editTextUserName.editText?.setText(it.name)
+                    bindingRegister.editTextEmail.editText?.setText(it.email)
+                    bindingRegister.editTextPassword.editText?.setText(it.password)
+                    bindingRegister.registerBtn.isEnabled = it.isValid
 
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+                    nameStateFlow.value = bindingRegister.editTextUserName.editText?.text.toString()
+                    emailStateFlow.value = bindingRegister.editTextEmail.editText?.text.toString()
+                    passwordStateFlow.value = bindingRegister.editTextPassword.editText?.text.toString()
 
-        viewModel.uiEventFlow.onEach {
-            when (it) {
-                RegisterViewModel.UiEvent.NavigationToLoginScreen -> {
-                    showSnackbar(message = "$it", color = R.attr.colorSecondary)
-                    navigateToLogin()
                 }
-                is RegisterViewModel.UiEvent.ShowError -> {
-                    showSnackbar(message = it.errorMessage, color = R.attr.colorError)
-                }
-            }
-            bindingRegister.registerBtn.isEnabled = true
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+            }}
 
-        viewModel.validateRegisterForm(nameStateFlow, emailStateFlow, passwordStateFlow)
-            .debounce(500)
-            .drop(1)
-            .flowOn(Dispatchers.Default)
-            .onEach { registerValidation ->
-                logger.log("RegisterActivity", "${registerValidation.isValid}", Priority.V)
-                bindingRegister.registerBtn.isEnabled = registerValidation.isValid
-
-                if (registerValidation.nameErrorMessage != null) {
-                    bindingRegister.editTextUserName.error = registerValidation.nameErrorMessage
-                    bindingRegister.editTextUserName.setErrorIconDrawable(
-                        getErrorIconRes(
-                            registerValidation.nameErrorMessage
-                        )
-                    )
-                    bindingRegister.registerBtn.isEnabled = false
-                } else {
-                    bindingRegister.editTextUserName.error = null
-                    bindingRegister.editTextUserName.errorIconDrawable = null
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.uiEventFlow.collect {
+                    when (it) {
+                        RegisterViewModel.UiEvent.NavigationToLoginScreen -> {
+                            showSnackbar(message = "$it", color = R.attr.colorSecondary)
+                            navigateToLogin()
+                        }
+                        is RegisterViewModel.UiEvent.ShowError -> {
+                            showSnackbar(message = it.errorMessage, color = R.attr.colorError)
+                        }
+                    }
+                    bindingRegister.registerBtn.isEnabled = true
                 }
+            }}
 
-                if (registerValidation.emailErrorMessage != null) {
-                    bindingRegister.editTextEmail.error = registerValidation.emailErrorMessage
-                    bindingRegister.editTextEmail.setErrorIconDrawable(
-                        getErrorIconRes(
-                            registerValidation.emailErrorMessage
-                        )
-                    )
-                    bindingRegister.registerBtn.isEnabled = false
-                } else {
-                    bindingRegister.editTextEmail.error = null
-                    bindingRegister.editTextEmail.errorIconDrawable = null
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.validateRegisterForm(nameStateFlow, emailStateFlow, passwordStateFlow)
+                    .debounce(500)
+                    .drop(1)
+                    .flowOn(Dispatchers.Default)
+                    .collect { registerValidation ->
+                        logger.log("RegisterActivity", "${registerValidation.isValid}", Priority.V)
+                        bindingRegister.registerBtn.isEnabled = registerValidation.isValid
 
-                if (registerValidation.passwordErrorMessage != null) {
-                    bindingRegister.editTextPassword.error = registerValidation.passwordErrorMessage
-                    bindingRegister.editTextPassword.setErrorIconDrawable(
-                        getErrorIconRes(
-                            registerValidation.passwordErrorMessage
-                        )
-                    )
-                } else {
-                    bindingRegister.editTextPassword.error = null
-                    bindingRegister.editTextPassword.errorIconDrawable = null
-                }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+                        if (registerValidation.nameErrorMessage != null) {
+                            bindingRegister.editTextUserName.error = registerValidation.nameErrorMessage
+                            bindingRegister.editTextUserName.setErrorIconDrawable(
+                                getErrorIconRes(
+                                    registerValidation.nameErrorMessage
+                                )
+                            )
+                            bindingRegister.registerBtn.isEnabled = false
+                        } else {
+                            bindingRegister.editTextUserName.error = null
+                            bindingRegister.editTextUserName.errorIconDrawable = null
+                        }
+
+                        if (registerValidation.emailErrorMessage != null) {
+                            bindingRegister.editTextEmail.error = registerValidation.emailErrorMessage
+                            bindingRegister.editTextEmail.setErrorIconDrawable(
+                                getErrorIconRes(
+                                    registerValidation.emailErrorMessage
+                                )
+                            )
+                            bindingRegister.registerBtn.isEnabled = false
+                        } else {
+                            bindingRegister.editTextEmail.error = null
+                            bindingRegister.editTextEmail.errorIconDrawable = null
+                        }
+
+                        if (registerValidation.passwordErrorMessage != null) {
+                            bindingRegister.editTextPassword.error = registerValidation.passwordErrorMessage
+                            bindingRegister.editTextPassword.setErrorIconDrawable(
+                                getErrorIconRes(
+                                    registerValidation.passwordErrorMessage
+                                )
+                            )
+                        } else {
+                            bindingRegister.editTextPassword.error = null
+                            bindingRegister.editTextPassword.errorIconDrawable = null
+                        }
+                    }
+            }}
     }
 
     @SuppressLint("ShowToast")
