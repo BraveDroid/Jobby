@@ -86,7 +86,7 @@ class RegisterFragment : Fragment() {
                     when (it) {
                         RegisterViewModel.UiEvent.NavigationToLoginScreen -> {
                             showSnackbar(message = "$it", color = R.attr.colorSecondary)
-                            navigateToLogin()
+                            navigateToLogin(view)
                         }
                         is RegisterViewModel.UiEvent.ShowError -> {
                             showSnackbar(message = it.errorMessage, color = R.attr.colorError)
@@ -186,9 +186,10 @@ class RegisterFragment : Fragment() {
     private fun getErrorIconRes(msg: String?): Int =
         if (msg == null) 0 else R.drawable.ic_error_outline
 
-    private fun navigateToLogin() {
+    private fun navigateToLogin(view: View) {
         eventsTracker.trackUserSignedUpEvent()
         // TODO:RF 15/01/2022 deeplink
+        view.findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
     }
 
     override fun onStop() {

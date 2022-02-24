@@ -185,7 +185,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private fun navigateToHomeScreen(view: View) {
         eventsTracker.trackUserLoggedInEvent()
-        // TODO:RF 15/01/2022 deeplink
         view.findNavController()
             .navigate(Uri.parse(resources.getString(R.string.uri_deeplink_home)))
     }

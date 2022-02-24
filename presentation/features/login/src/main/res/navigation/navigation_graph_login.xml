@@ -12,6 +12,9 @@
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment
@@ -19,6 +22,7 @@
         android:name="com.bravedroid.jobby.login.login.LoginFragment"
         android:label="LoginFragment">
         <action
+            app:popUpToInclusive="false"
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
     </fragment>
